@@ -1,6 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Button from './Button';
+import ReactLoading from 'react-loading';
+import { useNavigate } from 'react-router-dom';
 const Navbar = () => {
+    const [loading, setLoading] = useState(false)
+    const navigate = useNavigate();
+    const goToProfile = () => {
+        setLoading(true);
+        setTimeout(() => {
+            navigate('/profile');
+        }, 2000);
+    };
+
     return (
         <div className='flex justify-between py-4 items-center px-8'
             style={{
@@ -14,10 +25,13 @@ const Navbar = () => {
                 <a href="">For companies</a>
             </div>
             <div className="flex gap-10">
-                <Button
-                    text="Login for students"
-                    className="w-40 h-10  border border-[#AAB1CE] rounded-xl"
-                />
+                <a href='/profile' onClick={goToProfile} >
+                    <Button
+                        text="Profile"
+                        className="w-40 h-10 border border-[#AAB1CE] rounded-xl"
+                    />
+                </a>
+
                 <Button
                     text="Login for recruiters"
                     className="w-40 h-10 text-white bg-[#2B308B] rounded-xl"

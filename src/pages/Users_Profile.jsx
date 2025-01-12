@@ -4,7 +4,7 @@ import Navbar from '../Components/Navbar'
 import Student_Card from '../Components/Student_Card'
 import View_Edit from '../Components/View_Edit'
 
-const Profile = () => {
+const Users_Profile = () => {
     return (
         <>
             <div className='bg-[#F8F9FA]'>
@@ -17,4 +17,4 @@ const Profile = () => {
     )
 }
 
-export default Profile
+export default Users_Profile

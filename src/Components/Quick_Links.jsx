@@ -45,7 +45,7 @@ const Quick_Links = () => {
                 <Button className='text-[#275DF5] text-xl font-bold' text="Add" />
             </div>
             <div className='flex justify-between'>
-                <p className='text-lg font-medium'>Academic achievements</p>
+                <p className='text-lg font-medium'>Certifications</p>
                 <Button className='text-[#275DF5] text-xl font-bold' text="Add" />
             </div>
             <div className='flex justify-between'>
