@@ -1,19 +1,26 @@
 import React, { useState } from 'react'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import request from '../api/request';
 const Student_Profile_Summary = () => {
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [inputValue, setInputValue] = useState(null);
     const [profileSummary, setProfileSummary] = useState('');
-    const saveProfileSummary = () => {
+    const saveProfileSummary = async () => {
+        const profile_summary={
+            profileSummary:inputValue
+        }
+        // console.log(inputValue)
+        const response = await request('post', "/", profile_summary);
+        console.log(response)
         setProfileSummary(inputValue)
-        setIsModalOpen(false)
+        // setIsModalOpen(false)
     }
     const handleInputChange = (e) => {
         const words = e.target.value.split(" ");
 
         // Allow input only if word count is <= 50
-        if (words.length <= 50) {
+        if (words.length <= 200) {
             setInputValue(e.target.value);
         } else {
             // Trigger toast notification if word count exceeds 50

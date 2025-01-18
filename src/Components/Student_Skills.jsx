@@ -4,6 +4,7 @@ const Student_Skills = () => {
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [inputValue, setInputValue] = useState(null);
     const [filteredSkills, setFilteredSkills] = useState([]);
+    const [updatedSkills, setUpdatedSkills] = useState([])
     const [selectedSkills, setSelectedSkills] = useState([]);
     const filterSkills = (e) => {
         const searchValue = e.target.value.toLowerCase();
@@ -13,14 +14,19 @@ const Student_Skills = () => {
         setFilteredSkills(filteredSkill);
         // console.log(filteredSkills);
     }
-    const addRemoveSkills = (skill) => {
+    const addRemoveSkills = async (skill) => {
         // console.log(skill)
         const currentSkills = [...selectedSkills];
         const isAlreadySelected = selectedSkills.includes(skill);
         const updatedSelectedSkills = isAlreadySelected ? (selectedSkills.filter((selectSkill) => selectSkill !== skill)) : [...currentSkills, skill];
-        // console.log(updatedSelectedSkills);
-        setSelectedSkills(updatedSelectedSkills);
+        console.log(updatedSelectedSkills);
+        // const response = await request('post', "/", updatedSelectedSkills);
+        // console.log(response)
+        setUpdatedSkills(updatedSelectedSkills);
         console.log(selectedSkills)
+    }
+    const sendSkillsToserver = async () => {
+        // console.log(sen)
     }
     const removeSkill = (skill) => {
         const newSkill = selectedSkills.filter(selectSkill => selectSkill != skill);
@@ -290,10 +296,7 @@ const Student_Skills = () => {
                         <div className='flex justify-end gap-2'>
                             <button className='text-[#275df5] font-semibold'>I'll add this later</button>
                             <button
-                                onClick={() => {
-                                    setIsModalOpen(false)
-                                    // setFilteredSkills('');
-                                }}
+                                onClick={sendSkillsToserver}
                                 className='bg-[#275df5] text-white px-3 py-2 rounded-xl'>Save Changes</button>
                         </div>
                     </div>

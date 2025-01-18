@@ -1,5 +1,6 @@
 import { faL } from '@fortawesome/free-solid-svg-icons';
 import React, { useState, useEffect } from 'react'
+import request from '../api/request';
 
 const Student_Languages = () => {
     const [isModalOpen, setIsModalOpen] = useState(false)
@@ -18,7 +19,7 @@ const Student_Languages = () => {
         const filter = languages.filter((language) => language.toLowerCase().startsWith(currLetter))
         setFilteredLanguages(filter);
     }
-    const languageSelect = () => {
+    const languageSelect = async () => {
         const comfortLevel = isComfortSelected;
         let comfortable = "";
 
@@ -50,7 +51,7 @@ const Student_Languages = () => {
                 return [...prevLanguages, newLang];
             }
         });
-
+        const response = await request('post', "/", selectedLanguages);
         setIsLangSelected(false);
         setIsModalOpen(false);
 
@@ -239,7 +240,7 @@ const Student_Languages = () => {
                                     <div className=''>
                                         <input type="text"
                                             className='border-2 w-full p-3 outline-none'
-                                            onFocus={()=>{
+                                            onFocus={() => {
                                                 setLangFocused(true)
                                                 setFilteredLanguages(languages)
                                             }}

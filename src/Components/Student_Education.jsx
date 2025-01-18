@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Student_School_Education from './Student_School_Education';
 import Student_College_Education from './Student_College_Education';
+import request from '../api/request';
 
 const Student_Education = () => {
 
@@ -102,8 +103,20 @@ const Student_Education = () => {
         setQualification(true)
     }
     useEffect(() => {
-        console.log(collegeInfo)
-    }, [college, collegeInfo])
+        const fetchData = async () => {
+            const combinedData = {
+                collegeInfo,
+                schoolInfo
+            };
+            console.log(combinedData);
+
+            const response = await request('post', "/", combinedData);
+            console.log(response);
+        };
+
+        fetchData();
+    }, [college, collegeInfo, schoolInfo]);
+
     const options = ['Class X', 'Class XII', 'Graduation', 'Post Graduation', 'Doctorate']
     return (
         <>

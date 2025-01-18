@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import Button from './Button';
-import ReactLoading from 'react-loading';
 import { useNavigate } from 'react-router-dom';
 const Navbar = () => {
     const [loading, setLoading] = useState(false)

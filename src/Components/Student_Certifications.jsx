@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { format } from 'date-fns';
 import { v4 as uuidv4 } from 'uuid';
+import request from '../api/request';
 const Student_Certifications = () => {
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [inputValue, setInputValue] = useState('');
@@ -32,7 +33,7 @@ const Student_Certifications = () => {
         setIsModalOpen(false)
     }
 
-    const addInternship = () => {
+    const addInternship = async () => {
         const index = selectInternship.findIndex(internship => String(internship.id) === String(internshipId));
         console.log(index)
         // Format dates as strings for consistency before updating state
@@ -68,9 +69,12 @@ const Student_Certifications = () => {
                 gitHubLink,
                 liveLink,
             };
+            console.log(selectInternship)
+            const response = await request('post', "/", selectInternship);
+            console.log(response)
             setSelectInternship([...selectInternship, newInternship]);
         }
-        closeModal();
+        // closeModal();
     };
 
     const editInternship = (internship) => {

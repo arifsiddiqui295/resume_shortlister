@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Button from './Button';
+import request from '../api/request.js';
 const Student_Card = () => {
 
     const [isOpen, setIsOpen] = useState(false);
@@ -12,20 +13,28 @@ const Student_Card = () => {
     const [email, setEmail] = useState('')
     const [number, setNumber] = useState('')
     var [studentDetails, setStudentDetails] = useState({});
-    const add_Student_Details = () => {
-        const newStudent = {
-            email: email,
-            fullName: fullName,
-            gender: gender,
-            date: date,
-            location: location,
-            hometown: hometown,
-            number: number
-        };
-        setStudentDetails(newStudent);
-        setDataPresent(true)
-        setIsOpen(false)
-    }
+    const add_Student_Details = async () => {
+        try {
+            const newStudent = {
+                email: email,
+                fullName: fullName,
+                gender: gender,
+                date: date,
+                location: location,
+                hometown: hometown,
+                number: number
+            };
+
+            const response = await request('post', "/", newStudent);
+            console.log("Response:", response);
+
+            setStudentDetails(newStudent);
+            setDataPresent(true);
+            // setIsOpen(false);
+        } catch (error) {
+            console.error("Error adding student details:", error);
+        }
+    };
     useEffect(() => {
         // Check if studentDetails is empty by checking the length of its keys
         if (Object.keys(studentDetails).length === 0) {

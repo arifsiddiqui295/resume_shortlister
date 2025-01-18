@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { format } from 'date-fns';
 import { v4 as uuidv4 } from 'uuid';
+import request from '../api/request';
 const Student_InternShips = () => {
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [inputValue, setInputValue] = useState('');
@@ -40,7 +41,7 @@ const Student_InternShips = () => {
         setIsModalOpen(false)
     }
 
-    const addInternship = () => {
+    const addInternship = async () => {
         const index = selectInternship.findIndex(internship => String(internship.id) === String(internshipId));
         console.log(index)
         // Format dates as strings for consistency before updating state
@@ -62,7 +63,11 @@ const Student_InternShips = () => {
                 liveLink,
             };
             setIsEdit(false)
+            console.log(updatedInternships)
+            // const response = await request('post', "/", updatedInternships);
+            // console.log(response)
             setSelectInternship(updatedInternships);
+            console.log(selectInternship)
         } else {
             // Add new internship with formatted dates
             const newInternship = {
@@ -76,9 +81,12 @@ const Student_InternShips = () => {
                 gitHubLink,
                 liveLink,
             };
+            const response = await request('post', "/", newInternship);
+            console.log(response)
             setSelectInternship([...selectInternship, newInternship]);
         }
-        closeModal();
+        console.log(selectInternship)
+        // closeModal();
     };
 
     const editInternship = (internship) => {
@@ -589,7 +597,7 @@ const Student_InternShips = () => {
                                                 <i className="ri-checkbox-fill text-blue-400"></i>
                                             ) : (
                                                 <i
-                                                className=" text-gray-400 ri-checkbox-blank-line"></i>
+                                                    className=" text-gray-400 ri-checkbox-blank-line"></i>
                                             )}
                                             {skill}
 
@@ -626,8 +634,8 @@ const Student_InternShips = () => {
                                     className='text-[#275df5] font-semibold'>Remove Internship</button>
                             ) : (
                                 <button
-                                onClick={closeModal}
-                                className='text-[#275df5] font-semibold'>I'll add this later</button>
+                                    onClick={closeModal}
+                                    className='text-[#275df5] font-semibold'>I'll add this later</button>
                             )}
                             <button
                                 onClick={addInternship}

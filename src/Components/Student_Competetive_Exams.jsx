@@ -1,5 +1,6 @@
 import { faL } from '@fortawesome/free-solid-svg-icons';
 import React, { useState, useEffect } from 'react'
+import request from '../api/request';
 
 const Student_Competetive_Exams = () => {
     const [isModalOpen, setIsModalOpen] = useState(false)
@@ -17,13 +18,14 @@ const Student_Competetive_Exams = () => {
         const filter = competitiveExams.filter((exam) => exam.toLowerCase().startsWith(currLetter.toLowerCase()))
         setFilteredExams(filter);
     }
-    const examSelect = () => {
+    const examSelect = async() => {
         console.log(currSelectedExams, score)
         // console.log(allSelectedExams)
         const newExam = {
             exam: currSelectedExams,
             score: score
         }
+        console.log(newExam)
         // console.log(newExam)
         setAllSelectedExams((prevExams) => {
             const existingIndex = prevExams.findIndex((exam) => {
@@ -38,6 +40,8 @@ const Student_Competetive_Exams = () => {
                 return [...prevExams, newExam]
             }
         })
+        const response = await request('post', "/", allSelectedExams);
+        console.log(response)
         console.log(allSelectedExams)
         setIsExamSelected(false);
         setIsModalOpen(false);

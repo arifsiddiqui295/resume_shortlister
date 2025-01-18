@@ -1,11 +1,18 @@
 import React, { useState } from 'react'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import request from '../api/request';
 const Student_Accomplishments = () => {
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [inputValue, setInputValue] = useState(null);
     const [profileSummary, setProfileSummary] = useState('');
-    const saveProfileSummary = () => {
+    const saveProfileSummary = async () => {
+        const Student_Accomplishments = {
+            studentAccomplishments: inputValue
+        }
+        console.log(inputValue)
+        const response = await request('post', "/", Student_Accomplishments);
+        console.log(response)
         setProfileSummary(inputValue)
         setIsModalOpen(false)
     }
