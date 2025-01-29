@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import request from '../api/request';
 const Student_Career = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [isInternship, setIsInternship] = useState(false);
@@ -9,11 +10,12 @@ const Student_Career = () => {
     const [inputValue, setInputValue] = useState('');
     const [selectedCities, setSelectedCities] = useState([]);
     const [filteredCities, setFilteredCities] = useState([]);
+    const [preferredLocations, setPreferredLocations] = useState([]);
     const [selectedDate, setSelectedDate] = useState('15 Days or less');
     const [jobType, setJobType] = useState([]);
 
-    const settingValues = () => {
-        console.log(isInternship);
+    const settingValues = async () => {
+        console.log('isInternship: ', isInternship);
         console.log(isJob);
         if (isInternship && isJob) {
             setJobType(['Internship,', ' Job']);
@@ -31,6 +33,9 @@ const Student_Career = () => {
         if (selectedCities.length < 3) {
             toast.error("Select Atlest 3 cities")
         } else {
+            
+            // const response = await request('post', "/", newStudent);
+            // console.log("Response:", response);
             setIsOpen(false)
             setFilteredCities('')
             setIsInternship(false);
@@ -193,8 +198,8 @@ const Student_Career = () => {
                                     className="ml-auto inline-flex justify-center items-center gap-x-2 rounded-full focus:outline-none"
                                     onClick={() => {
                                         setIsOpen(false)
-                                            setFilteredCities('');
-                                            console.log("hdh")
+                                        setFilteredCities('');
+                                        console.log("hdh")
                                     }} // Close modal
                                 >
                                     <span className="sr-only">Close</span>
@@ -284,19 +289,31 @@ const Student_Career = () => {
                                         )}
                                     </div>
                                     <div className=''>
-                                        <input
-                                            type="text"
-                                            className='border-2 w-full p-3 outline-none'
-                                            placeholder='Search Cities'
-                                            value={inputValue}
-                                            onChange={filterValue}
-                                            onFocus={() => {
-                                                // Show all cities when input is focused, if no inputValue exists
-                                                if (!inputValue) {
-                                                    setFilteredCities(cities);
-                                                }
-                                            }}
-                                        />
+                                        <div className='relative'>
+                                            <input
+                                                type="text"
+                                                className='border-2 w-full p-3 outline-none'
+                                                placeholder='Search Cities'
+                                                value={inputValue}
+                                                onChange={filterValue}
+                                                onFocus={() => {
+                                                    // Show all cities when input is focused, if no inputValue exists
+                                                    if (!inputValue) {
+                                                        setFilteredCities(cities);
+                                                    }
+                                                }}
+                                            />
+                                            {inputValue && (
+                                                <button
+                                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+                                                // onClick={()=>{
+                                                //     setInputValue('')
+                                                // }}
+                                                >
+                                                    ✕
+                                                </button>
+                                            )}
+                                        </div>
                                         {filteredCities.length > 0 && (
                                             <ul>
                                                 {filteredCities.map((city, index) => (
@@ -323,11 +340,11 @@ const Student_Career = () => {
                             </div>
                             <div className='flex justify-end gap-2'>
                                 <button
-                                onClick={()=>{
-                                    setFilteredCities('');
-                                    console.log("hdh")
-                                }}
-                                className='text-[#275df5] font-semibold'>I'll add this later</button>
+                                    onClick={() => {
+                                        setFilteredCities('');
+                                        console.log("hdh")
+                                    }}
+                                    className='text-[#275df5] font-semibold'>I'll add this later</button>
                                 <button
                                     onClick={settingValues}
                                     className='bg-[#275df5] text-white px-3 py-2 rounded-xl'>Save Changes</button>

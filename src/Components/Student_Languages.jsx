@@ -51,7 +51,7 @@ const Student_Languages = () => {
                 return [...prevLanguages, newLang];
             }
         });
-        const response = await request('post', "/", selectedLanguages);
+        // const response = await request('post', "/", selectedLanguages);
         setIsLangSelected(false);
         setIsModalOpen(false);
 

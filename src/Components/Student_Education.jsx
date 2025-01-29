@@ -110,8 +110,8 @@ const Student_Education = () => {
             };
             console.log(combinedData);
 
-            const response = await request('post', "/", combinedData);
-            console.log(response);
+            // const response = await request('post', "/", combinedData);
+            // console.log(response);
         };
 
         fetchData();

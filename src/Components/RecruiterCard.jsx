@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Button from './Button';
 import request from '../api/request.js';
-const Student_Card = () => {
+const RecruiterCard = () => {
 
     const [isOpen, setIsOpen] = useState(false);
     const [dataPresent, setDataPresent] = useState();
@@ -60,108 +60,54 @@ const Student_Card = () => {
     return (
         <>
             <div className='px-32 py-10'>
-                <div className='w-full flex bg-[#ffffff] shadow-lg px-5 rounded-lg py-16'>
-                    <div className='flex items-center gap-10'>
-                        <div className='flex gap-16 items-center'>
-                            <img className='w-32 h-32 rounded-full ' src="https://images.unsplash.com/photo-1479936343636-73cdc5aae0c3?q=80&w=1780&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" />
-                            {dataPresent ? (
-                                <div className='flex flex-col text-left'>
-                                    <div className='flex items-center gap-2 text-white mb-10'>
-                                        <h1 className='text-black text-3xl'>
-                                            {studentDetails.fullName}</h1>
-                                        <i
-                                            onClick={updateDetails}
-                                            className="ri-pencil-line text-[#717B9E] mt-1 text-2xl "></i>
-                                    </div>
-                                    <div className='flex gap-5'>
-                                        <div className='flex flex-col gap-4'>
-                                            <div className='flex gap-3 items-center'>
-                                                <i className="ri-map-pin-line text-[#717B9E]"></i>
-                                                <p className='text-[#275DF5] text-lg font-medium'> {studentDetails.location}</p>
-                                            </div>
-                                            <div className='flex gap-3 items-center'>
-                                                <i className="ri-men-line text-[#717B9E]"></i>
-                                                <p className='text-[#275DF5] text-lg font-medium'> {studentDetails.gender}</p>
-                                            </div>
-                                            <div className='flex gap-3 items-center'>
-                                                <i className="ri-cake-2-line text-[#717B9E]"></i>
-                                                <p className='text-[#275DF5] text-lg font-medium'> {studentDetails.date}</p>
-                                            </div>
-                                        </div>
-                                        <div className='flex flex-col gap-4'>
-                                            <div className='flex items-center gap-2'>
-                                                <div className='flex gap-3 items-center'>
-                                                    <i className="ri-phone-line text-[#717B9E]"></i>
-                                                    <p className='text-[#717B9E] text-lg font-medium'>{studentDetails.number}</p>
-                                                </div>
-                                                <a href="" className='text-[#275DF5] font-bold'>Verify</a>
-                                            </div>
-                                            <div className='flex items-center'>
-                                                <div className='flex gap-3'>
-                                                    <i className="ri-mail-line text-[#717B9E]"></i>
-                                                    <p className='text-[#717B9E] text-lg font-medium'>{studentDetails.email}</p>
-                                                </div>
-                                                <p><i className="ri-verified-badge-fill p-2 text-green-400"></i></p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            ) : (
-                                <div className='flex gap-1 items-center cursor-pointer'>
+                <div className='flex bg-[#ffffff] shadow-lg px-5 rounded-lg py-16'>
+                    <div className='flex items-center gap-10 w-full justify-center'>
+                        <div className='flex gap-16 items-center '>
+                            <img className='w-32 h-32 rounded-full ' src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAMAAzAMBIgACEQEDEQH/xAAbAAEAAgMBAQAAAAAAAAAAAAAABAUBAgMGB//EADMQAQACAQIGAQIDBQkAAAAAAAABAgMRMQQFEiFBUWETIjJxoSNSgbHBFDM0YnKCkdHh/8QAFAEBAAAAAAAAAAAAAAAAAAAAAP/EABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAMAwEAAhEDEQA/APogAAAAAAAAABOwA5W4fHadbRaZiNPxN6UinaNf4y2AAAAAAAAAAAJK7EldgAAAAAAAAASeG4PJnnq/DTzM/wBARhc4+C4ekadHV827yzThMFLzetIifAK3HwefLGtaaR7tOje3LuI07dE/Gq3YBQ3xZMc/tKTX5aPQWiJiYtWJj1KFn5dW+s4ftnzE7ArBtelsdum9ZrPzDUAAAAAACSuxJXYAAAAAAAAEngcEZ8/eftr3n5XERGnr4QuVU0w3t5tf9NE4GAAAADxoAOXE4K8Rj0t+KPw29KSY6Zmsx3idHoFPzCsU4q+m06SCMAAAAABJXYkrsAAAAAAAAC45b/hK/wAf5pKHyu8W4eaeaT+kpgAAAAAACq5tH7av+la+dFRzK0X4qYjaIiARQAAAAAJK7EldgAAAAAAAJ9gn8sx5a3m8RH07RpOqyc+G0+hj026Y0dAAAAAAANdPunx3efyWnJe1u8dUzPd6BU80iK8RrEbxrIIgAAAAAEldiSuwAAAAAADEsgLbluXr4fpnfH2n8vCWpeD4j+zZJvNZtWY0mIW3D5frYYyR5nTT0DoAAAAAB509qXmF/qcVf1H2rPieKx4NYmZ69NYjType89538gAAAAAASV2JK7AAAAAAAAALHlWXTrxzP+aFc3wZJxZa3r4nvAL4I7xrGwAAATPaY28iHzLPOLF0V7Tfz8AgcVl+rnvfxrpDiAAAAAAAEldiSuwAAAAAAAABWNbRHyJfAcPbJli9q/ZWdYn5BbbaRG0AAAAK7m8f3fzrCxcOMwznw9NdOqJ1rqClGbRNJmLRMTE92NQAAAAAAJK7EldgAAAk1APLfHjvltpjpa0pmLltt819I/dr3BAdcPD5c0/ZSdPc9lvj4bFj06aRr7dQQuH5fSmls09c+o2hNiNPWkbQAAAAAAAOebBjzV0vGs+LeYVubl2Wms45i8f8StgHn5rava1Zj82HoL0rftasT+fdFzcBhv8Ag1xyCpEjPwefF36euvuv/SP5/mAABJXYkrsABOwM1rN5rWsTNp8R4WfD8vx1rE5fvt+kMcrwzTHOW29u0fknAxWsVjprERHqGfAAAAAAAAAAAAAAMx2YAI7OWbhsWb8VI19xu6gKji+Dtgnqr91P1hFehtWtomLRrE9tFFnxThzWpPie3zAOcldiSuwDMR1TEe+zDvwNeriqeo7gucdfp0inqGTQAAAAAAAAAAAAAAAAAAAV3NqffTJ/tWKNzGnXwtp/d7gp5K7MSzXYBP5TTW17+o0QNVtyynTw0W/emZ/oCWAAAAAAAAAAAAAAAAAAAA1yU68dq+40bAPOzvozXZ14yn0+JyVj3/65V2B//9k=" alt="" />
+                            <div className='flex flex-col text-left'>
+                                <div className='flex items-center gap-2 text-white mb-10'>
+                                    <h1 className='text-black text-3xl'>
+                                        Arif Siddiuqi</h1>
                                     <i
-                                        onClick={updateDetails}
+                                        // onClick={updateDetails}
                                         className="ri-pencil-line text-[#717B9E] mt-1 text-2xl "></i>
-                                    <h1
-                                        onClick={updateDetails}
-                                        className="text-blue-700 font-bold"
-                                    >Add Details</h1>
                                 </div>
-
-                            )
-                            }
-                        </div>
-                        <div className='w-96 flex flex-col gap-5 rounded-lg px-7 py-5 bg-[#CEDEFF]'>
-                            <div className='flex justify-between items-center '>
-                                <div className='flex gap-2 items-center'>
-                                    <div className='w-12 h-12 rounded-full bg-white flex items-center justify-center'>
-                                        <i className="ri-graduation-cap-line text-3xl font-mono text-[#717B9E]"></i>
+                                <div className='flex gap-5'>
+                                    <div className='flex flex-col gap-4'>
+                                        <div className='flex gap-3 items-center'>
+                                            <i className="ri-map-pin-line text-[#717B9E]"></i>
+                                            <p className='text-[#275DF5] text-lg font-medium'> Bhopal</p>
+                                        </div>
+                                        <div className='flex gap-3 items-center'>
+                                            <i className="ri-men-line text-[#717B9E]"></i>
+                                            <p className='text-[#275DF5] text-lg font-medium'> Male</p>
+                                        </div>
+                                        <div className='flex gap-3 items-center'>
+                                            <i className="ri-cake-2-line text-[#717B9E]"></i>
+                                            <p className='text-[#275DF5] text-lg font-medium'> djdjdj</p>
+                                        </div>
                                     </div>
-                                    <p className='text-md font-semibold'>Add Education</p>
-                                </div>
-                                <div className='flex gap-2 bg-white items-center w-20 h-7 px-2 rounded-2xl text-green-400 text-xl'>
-                                    <i className="ri-arrow-up-line "></i>
-                                    <p>10%</p>
+                                    <div className='flex flex-col gap-4'>
+                                        <div className='flex items-center gap-2'>
+                                            <div className='flex gap-3 items-center'>
+                                                <i className="ri-phone-line text-[#717B9E]"></i>
+                                                <p className='text-[#717B9E] text-lg font-medium'>8770993602</p>
+                                            </div>
+                                            <a href="" className='text-[#275DF5] font-bold'>Verify</a>
+                                        </div>
+                                        <div className='flex items-center'>
+                                            <div className='flex gap-3'>
+                                                <i className="ri-mail-line text-[#717B9E]"></i>
+                                                <p className='text-[#717B9E] text-lg font-medium'>ajndfnf@mgai.com</p>
+                                            </div>
+                                            <p><i className="ri-verified-badge-fill p-2 text-green-400"></i></p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div className='flex justify-between items-center '>
-                                <div className='flex gap-2 items-center'>
-                                    <div className='w-12 h-12 rounded-full bg-white flex items-center justify-center'>
-                                        <i className="ri-mobile-download-line text-3xl font-mono text-[#717B9E]"></i>
-                                    </div>
-                                    <p className='text-md font-semibold'>Verify Mobile</p>
-                                </div>
-                                <div className='flex gap-2 bg-white items-center w-20 h-7 px-2 rounded-2xl text-green-400 text-xl'>
-                                    <i className="ri-arrow-up-line "></i>
-                                    <p>10%</p>
-                                </div>
-                            </div>
-                            <div className='flex justify-between items-center '>
-                                <div className='flex gap-2 items-center'>
-                                    <div className='w-12 h-12 rounded-full bg-white flex items-center justify-center'>
-                                        <i className="ri-graduation-cap-line text-3xl font-mono text-[#717B9E]"></i>
-                                    </div>
-                                    <p className='text-md font-semibold'>Add Details</p>
-                                </div>
-                                <div className='flex gap-2 bg-white items-center w-20 h-7 px-2 rounded-2xl text-green-400 text-xl'>
-                                    <i className="ri-arrow-up-line "></i>
-                                    <p>10%</p>
-                                </div>
-                            </div>
-                            <Button text="Add 16 missing details" className='bg-[#275df5] rounded-2xl py-3 text-white ' />
                         </div>
                     </div>
                     <div>
-
                     </div>
                 </div>
             </div>
@@ -303,4 +249,4 @@ const Student_Card = () => {
     )
 }
 
-export default Student_Card
+export default RecruiterCard;
