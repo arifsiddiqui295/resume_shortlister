@@ -25,11 +25,11 @@ const RecruiterCareerSkills = () => {
                 <RecruiterEmployment />
                 <RecruiterCertifications />
                 <div className='flex w-full items-center justify-center'>
-                    <button
+                    <a href="recuiter-results"
                         className="mt-4 bg-blue-500 text-white px-6 text-xl py-3 rounded-md hover:bg-blue-600"
                     >
                         Search
-                    </button>
+                    </a>
                 </div>
                 {/* <Skills_Languages />
                 <Skills_Languages />

@@ -19,9 +19,9 @@ const Navbar = () => {
         >
             <div className="logo text-2xl"><img src="https://synques-dyn-cdn.s3.ap-south-1.amazonaws.com/oriental/images/logo.webp" alt="" /></div>
             <div className="navoptions flex gap-20 text-lg text justify-center">
-                <a href="">Jobs</a>
-                <a href="">For job seekers</a>
-                <a href="">For companies</a>
+                <a href="job">Jobs</a>
+                <a href="application-status">For job seekers</a>
+                <a href="recuiter-search">For companies</a>
             </div>
             <div className="flex gap-10">
                 <a href='/profile' onClick={goToProfile} >
@@ -32,7 +32,7 @@ const Navbar = () => {
                 </a>
 
                 <Button
-                    text="Login for recruiters"
+                    text="Login"
                     className="w-40 h-10 text-white bg-[#2B308B] rounded-xl"
                 />
 

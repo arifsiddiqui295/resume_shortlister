@@ -1,6 +1,7 @@
 import React from 'react'
 import Design from '../Components/Design'
 import Footer from '../Components/Footer'
+import HeroSection from '../Components/HeroSection'
 import Home_companies from '../Components/Home_companies'
 import Home_Name from '../Components/Home_Name'
 import Home_talent from '../Components/Home_talent'
@@ -13,8 +14,8 @@ const Home = () => {
     return (
         <>
             <Navbar />
-            <Design />
-            <Line className='border border-[#AAB1CE] ' />
+            <HeroSection />
+            {/* <Line className='border border-[#AAB1CE] ' /> */}
             <Home_companies />
             <Home_talent />
             <Line className='border border-[#D8D8D8] w-full' />
