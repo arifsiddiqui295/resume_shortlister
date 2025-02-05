@@ -1,10 +1,22 @@
 import axios from "axios";
-
+import { ACCESS_TOKEN } from "../constants";
 const api = axios.create({
-  // baseURL: "https://webhook.site/112276fe-3b24-47d2-9e12-c279bf821562",
-  baseURL: "http://localhost:8000",
+  // baseURL: "http://127.0.0.1:8000",
+  baseURL: "https://placementportal-pg56.onrender.com",
   headers: {
     "Content-Type": "application/json",
   },
 });
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem(ACCESS_TOKEN);
+    if (token) {
+      config.headers.Authorization = ` Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 export default api;

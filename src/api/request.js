@@ -1,7 +1,7 @@
 import api from "./api";
 
 const request = async (method, endpoint, data = null, params = null) => {
-  console.log("endpoint:", endpoint);
+  // console.log("endpoint:", endpoint);
   try {
     const response = await api({
       method,
