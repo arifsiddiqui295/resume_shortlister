@@ -1,12 +1,23 @@
-import React, { useState, useMemo } from 'react';
-
+import React, { useState, useMemo, useEffect } from 'react';
+import request from '../api/request';
+import { useStudent } from '../context/StudentProvider';
 const Student_Skills = () => {
+    const { student } = useStudent();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [inputValue, setInputValue] = useState('');
     const [selectedSkills, setSelectedSkills] = useState([]);
     const [customSkills, setCustomSkills] = useState([]);
     const [isInputFocused, setIsInputFocused] = useState(false);
 
+    useEffect(() => {
+        const studentSkills = async () => {
+            const res = await request('get', '/skills/');
+            // console.log('res: ', res)
+            setSelectedSkills(res[0].skills);
+            // console.log('student: ', student)
+        }
+        studentSkills();
+    }, [])
     const refinedSkills = useMemo(() => [
         "Python", "Java", "JavaScript", "Express.js", "MongoDB", "C#", "C++", "SQL", "Machine Learning",
         "Artificial Intelligence", "Data Science", "Cloud Computing (AWS, Azure, GCP)", "DevOps", "Cybersecurity",
@@ -38,15 +49,15 @@ const Student_Skills = () => {
     const filteredSkills = useMemo(() => {
         if (isInputFocused && !inputValue) return refinedSkills;
         const searchValue = inputValue.toLowerCase();
-        return allSkills.filter(skill => 
+        return allSkills.filter(skill =>
             skill.toLowerCase().includes(searchValue)
         );
     }, [inputValue, allSkills, isInputFocused, refinedSkills]);
 
     const addRemoveSkills = (skill) => {
-        setSelectedSkills(prev => 
-            prev.includes(skill) 
-                ? prev.filter(s => s !== skill) 
+        setSelectedSkills(prev =>
+            prev.includes(skill)
+                ? prev.filter(s => s !== skill)
                 : [...prev, skill]
         );
     };
@@ -79,7 +90,10 @@ const Student_Skills = () => {
     const sendSkillsToServer = async () => {
         // Implement your API call here
         setIsModalOpen(false);
-        console.log("Sending skills to server:", selectedSkills);
+        // console.log("student: ", student)
+        // console.log("selectedSkills: ", selectedSkills)
+        const res = await request('post', '/skills/', { skills: selectedSkills, student });
+        // console.log(res);
     };
 
     return (

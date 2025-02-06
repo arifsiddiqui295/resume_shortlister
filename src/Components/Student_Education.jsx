@@ -16,7 +16,17 @@ const Student_Education = () => {
     const [collegeInfo, setCollegeInfo] = useState([]);
     const [schoolUpdateInfo, setSchoolUpdateInfo] = useState({});
     const [collegeUpdateInfo, setCollegeUpdateInfo] = useState({});
+    const [educationDetails, setEducationDetails] = useState([]);
 
+    useEffect(() => {
+        const studentEducationDetails = async () => {
+            const res = await request('get', '/education/')
+            // console.log('res: ', res);
+            setEducationDetails(res);
+            // console.log('educationDetails: ', educationDetails);
+        }
+        studentEducationDetails();
+    },[])
     const handleSaveCollege = (newCollege) => {
         console.log(newCollege)
         setCollegeInfo((prevQualificationInfo) => {
@@ -45,7 +55,6 @@ const Student_Education = () => {
         setIsSchoolEdit(false); // Exit edit mode
         setIsOpen(false); // Close the modal
     };
-
     const editCollegeEducatoin = (college, grade_Program, schoolName_CollegName, board_specialization, percent_cgpa, startYear, passingYear) => {
         // console.log(college, grade_Program, schoolName_CollegName, board_specialization, percent_cgpa, startYear, passingYear)
         const update_education = {
@@ -102,20 +111,20 @@ const Student_Education = () => {
         }
         setQualification(true)
     }
-    useEffect(() => {
-        const fetchData = async () => {
-            const combinedData = {
-                collegeInfo,
-                schoolInfo
-            };
-            console.log(combinedData);
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         const combinedData = {
+    //             collegeInfo,
+    //             schoolInfo
+    //         };
+    //         console.log(combinedData);
 
-            // const response = await request('post', "/", combinedData);
-            // console.log(response);
-        };
+    //         // const response = await request('post', "/", combinedData);
+    //         // console.log(response);
+    //     };
 
-        fetchData();
-    }, [college, collegeInfo, schoolInfo]);
+    //     fetchData();
+    // }, [college, collegeInfo, schoolInfo]);
 
     const options = ['Class X', 'Class XII', 'Graduation', 'Post Graduation', 'Doctorate']
     return (
@@ -133,11 +142,11 @@ const Student_Education = () => {
                     </button>
                 </div>
                 <div className="flex flex-col gap-6 mt-4">
-                    {schoolInfo && (
-                        schoolInfo.map((value, index) => (
+                    {educationDetails && (
+                        educationDetails.map((value, index) => (
                             <div key={index}>
                                 <div className='flex gap-1 items-center'>
-                                    <h1 className='text-xl font-semibold'>{value.grade_Program} From {value.schoolName_CollegName} </h1>
+                                    <h1 className='text-xl font-semibold'>{value.qualification} From {value.school_college_name} </h1>
                                     <i
                                         onClick={() => editSchoolEducation(
                                             value.grade_Program,
@@ -151,14 +160,14 @@ const Student_Education = () => {
                                 </div>
                                 <div className=' text-[#1a192b]'>
                                     <div className='flex '>
-                                        <p className=''>{value.board_specialization}, {value.medium_university} </p>
+                                        <p className=''>{value.board_university}, {value.medium} </p>
                                         {value.medium_university && (
                                             <p className=''> </p>
                                         )}
                                     </div>
                                 </div>
                                 <div className='flex'>
-                                    <p className='text-[#818aa9]'>Scored {value.percent_cgpa}%, {value.passingYear}</p>
+                                    <p className='text-[#818aa9]'>Scored {value.percentage_cgpa} CGPA, {value.passing_year}</p>
                                     {/* <p className='text-[#818aa9]'></p> */}
                                 </div>
                             </div>

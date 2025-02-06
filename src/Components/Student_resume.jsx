@@ -8,7 +8,7 @@ const Student_resume = () => {
         if (file && file.type === "application/pdf") {
             setSelectedFile(file);
         } else {
-            alert("Please upload a valid PDF file.");
+            alert("Please upload a000 valid PDF file.");
         }
     };
 

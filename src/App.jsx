@@ -10,28 +10,31 @@ import ApplicationStatus from './pages/ApplicationStatus'
 import StudentLogin from './pages/StudentLogin'
 import ProtectedRoutes from './Components/ProtectedRoutes'
 import NotFound from './Components/NotFound'
+import { StudentProvider } from './context/StudentProvider'
 
 
 const App = () => {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path='/' element={<Home />} />
-        <Route path='/profile'
-          element={
-            <ProtectedRoutes>
-              <Users_Profile />
-            </ProtectedRoutes>
-          }
-        />
-        <Route path='/student-login' element={<StudentLogin />} />
-        <Route path='/job' element={<Job />} />
-        <Route path='/recuiter-search' element={<RecuiterSearch />} />
-        <Route path='/application-status' element={<ApplicationStatus />} />
-        <Route path='/recuiter-results' element={<RecruiterSearchResults />} />
-        <Route path='*' element={<NotFound />} />
-      </Routes>
-    </BrowserRouter>
+    <StudentProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path='/' element={<Home />} />
+          <Route path='/profile'
+            element={
+              <ProtectedRoutes>
+                <Users_Profile />
+              </ProtectedRoutes>
+            }
+          />
+          <Route path='/student-login' element={<StudentLogin />} />
+          <Route path='/job' element={<Job />} />
+          <Route path='/recuiter-search' element={<RecuiterSearch />} />
+          <Route path='/application-status' element={<ApplicationStatus />} />
+          <Route path='/recuiter-results' element={<RecruiterSearchResults />} />
+          <Route path='*' element={<NotFound />} />
+        </Routes>
+      </BrowserRouter>
+    </StudentProvider>
   )
 }
 

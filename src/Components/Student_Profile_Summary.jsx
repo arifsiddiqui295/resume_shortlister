@@ -1,24 +1,25 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import request from '../api/request';
+import { useStudent } from '../context/StudentProvider';
 const Student_Profile_Summary = () => {
+    const { student } = useStudent();
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [inputValue, setInputValue] = useState(null);
     const [profileSummary, setProfileSummary] = useState('');
+    const [primaryKey, setPrimaryKey] = useState('');
     const saveProfileSummary = async () => {
-        const profile_summary={
-            profileSummary:inputValue
-        }
+        const profile_summary = inputValue
         // console.log(inputValue)
-        const response = await request('post', "/", profile_summary);
-        console.log(response)
+        console.log(profileSummary)
+        const response = await request('post', "/summary/", { summary: profile_summary, student });
+        console.log("response:", response)
         setProfileSummary(inputValue)
         // setIsModalOpen(false)
     }
     const handleInputChange = (e) => {
         const words = e.target.value.split(" ");
-
         // Allow input only if word count is <= 50
         if (words.length <= 200) {
             setInputValue(e.target.value);
@@ -27,6 +28,9 @@ const Student_Profile_Summary = () => {
             toast.error("Only 50 words allowed.");
         }
     };
+    useEffect(() => {
+        const response = await request('post', "/summary/", { summary: profile_summary, student });
+    }, [])
     return (
         <>
             <ToastContainer position="top-right" autoClose={3000} hideProgressBar={true} />
@@ -47,8 +51,6 @@ const Student_Profile_Summary = () => {
                         ) : (<div>
                             Your Profile Summary should mention the highlights of your career and education, what your professional interests are, and what kind of a career you are looking for. Write a meaningful summary of more than 50 characters.
                         </div>
-
-
                         )
                         }
                     </div>

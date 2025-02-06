@@ -5,14 +5,12 @@ import request from '../api/request';
 const Student_InternShips = () => {
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [inputValue, setInputValue] = useState('');
-    const [projectName, setProjectName] = useState('');
     const [companyName, setCompanyName] = useState('');
     const [projectDescription, setProjectDescription] = useState('');
     const [gitHubLink, setGitHubLInk] = useState('');
     const [liveLink, setLiveLink] = useState();
     const [filteredSkills, setFilteredSkills] = useState([]);
     const [selectedSkills, setSelectedSkills] = useState([]);
-    const [internshipId, setInternshipId] = useState();
     const [selectInternship, setSelectInternship] = useState([]);
 
     const [isEdit, setIsEdit] = useState(false);
@@ -32,7 +30,6 @@ const Student_InternShips = () => {
         setSelectedFromDate(new Date());
         setSelectedToDate(new Date());
         setProjectDescription('');
-        setProjectName('')
         setSelectedSkills([]);
         setInputValue('')
         setGitHubLInk('');
@@ -42,79 +39,86 @@ const Student_InternShips = () => {
     }
 
     const addInternship = async () => {
-        const index = selectInternship.findIndex(internship => String(internship.id) === String(internshipId));
-        console.log(index)
-        // Format dates as strings for consistency before updating state
-        const formattedFromDate = selectedFromDate instanceof Date ? selectedFromDate.toDateString() : selectedFromDate;
-        const formattedToDate = selectedToDate instanceof Date ? selectedToDate.toDateString() : selectedToDate;
+        const newInternship = {
+            companyName,
+            selectedFromDate: formattedFromDate,
+            selectedToDate: formattedToDate,
+            projectDescription: projectDescription,
+            selectedSkills,
+            gitHubLink,
+            liveLink,
+        };
+        
+        // const index = selectInternship.findIndex(internship => String(internship.id) === String(internshipId));
+        // console.log(index)
+        // // Format dates as strings for consistency before updating state
+        // const formattedFromDate = selectedFromDate instanceof Date ? selectedFromDate.toDateString() : selectedFromDate;
+        // const formattedToDate = selectedToDate instanceof Date ? selectedToDate.toDateString() : selectedToDate;
 
-        if (index !== -1) {
-            // Create a copy of the array to maintain immutability
-            const updatedInternships = [...selectInternship];
-            updatedInternships[index] = {
-                ...updatedInternships[index],
-                companyName,
-                selectedFromDate: formattedFromDate,
-                selectedToDate: formattedToDate,
-                projectName: projectName,
-                projectDescription: projectDescription,
-                selectedSkills,
-                gitHubLink,
-                liveLink,
-            };
-            setIsEdit(false)
-            console.log(updatedInternships)
-            // const response = await request('post', "/", updatedInternships);
-            // console.log(response)
-            setSelectInternship(updatedInternships);
-            console.log(selectInternship)
-        } else {
-            // Add new internship with formatted dates
-            const newInternship = {
-                id: uuidv4(),
-                companyName,
-                selectedFromDate: formattedFromDate,
-                selectedToDate: formattedToDate,
-                projectName: projectName,
-                projectDescription: projectDescription,
-                selectedSkills,
-                gitHubLink,
-                liveLink,
-            };
-            const response = await request('post', "/", newInternship);
-            console.log(response)
-            setSelectInternship([...selectInternship, newInternship]);
-        }
-        console.log(selectInternship)
+        // if (index !== -1) {
+        //     // Create a copy of the array to maintain immutability
+        //     const updatedInternships = [...selectInternship];
+        //     updatedInternships[index] = {
+        //         ...updatedInternships[index],
+        //         companyName,
+        //         selectedFromDate: formattedFromDate,
+        //         selectedToDate: formattedToDate,
+        //         projectDescription: projectDescription,
+        //         selectedSkills,
+        //         gitHubLink,
+        //         liveLink,
+        //     };
+        //     setIsEdit(false)
+        //     console.log(updatedInternships)
+        //     // const response = await request('post', "/", updatedInternships);
+        //     // console.log(response)
+        //     setSelectInternship(updatedInternships);
+        //     console.log(selectInternship)
+        // } else {
+        //     // Add new internship with formatted dates
+        //     const newInternship = {
+        //         id: uuidv4(),
+        //         companyName,
+        //         selectedFromDate: formattedFromDate,
+        //         selectedToDate: formattedToDate,
+        //         projectDescription: projectDescription,
+        //         selectedSkills,
+        //         gitHubLink,
+        //         liveLink,
+        //     };
+        //     const response = await request('post', "/", newInternship);
+        //     console.log(response)
+        //     setSelectInternship([...selectInternship, newInternship]);
+        // }
+        // console.log(selectInternship)
         // closeModal();
     };
 
     const editInternship = (internship) => {
         setIsEdit(true);
-        setInternshipId(internship.id);
-        setCompanyName(internship.companyName);
+        // setInternshipId(internship.id);
+        // setCompanyName(internship.companyName);
 
-        // Convert dates to Date objects if they’re stored as strings
-        setSelectedFromDate(internship.selectedFromDate ? new Date(internship.selectedFromDate) : new Date());
-        setSelectedToDate(internship.selectedToDate ? new Date(internship.selectedToDate) : new Date());
-        setProjectDescription(internship.projectDescription);
-        setProjectName(internship.projectName)
-        setSelectedSkills(internship.selectedSkills);
-        setGitHubLInk(internship.gitHubLink);
-        setLiveLink(internship.liveLink);
-        setIsModalOpen(true);
+        // // Convert dates to Date objects if they’re stored as strings
+        // setSelectedFromDate(internship.selectedFromDate ? new Date(internship.selectedFromDate) : new Date());
+        // setSelectedToDate(internship.selectedToDate ? new Date(internship.selectedToDate) : new Date());
+        // setProjectDescription(internship.projectDescription);
+        // setSelectedSkills(internship.selectedSkills);
+        // setGitHubLInk(internship.gitHubLink);
+        // setLiveLink(internship.liveLink);
+        // setIsModalOpen(true);
     };
 
     const removeInternship = () => {
-        console.log(selectInternship)
-        console.log(internshipId)
-        const updateInternships = selectInternship.filter((intern) => {
-            return intern.id !== internshipId; // Use !== to avoid type coercion issues
-        });
-        // console.log(updateInternships);
-        setSelectInternship(updateInternships)
-        setIsModalOpen(false);
-        closeModal()
+        // console.log(selectInternship)
+        // console.log(internshipId)
+        // const updateInternships = selectInternship.filter((intern) => {
+        //     return intern.id !== internshipId; // Use !== to avoid type coercion issues
+        // });
+        // // console.log(updateInternships);
+        // setSelectInternship(updateInternships)
+        // setIsModalOpen(false);
+        // closeModal()
     }
     const filterSkills = (e) => {
         const searchValue = e.target.value.toLowerCase();
@@ -521,24 +525,9 @@ const Student_InternShips = () => {
                                 </div>
                             </div>
                         </div>
-
-                        {/* Project  name*/}
-                        <div className='flex flex-col py-5'>
-                            <h1 className='font-medium'>Project  name</h1>
-                            <div className='flex gap-3 m-2'>
-                                <input
-                                    type="text"
-                                    className='border-2 border-gray-400 w-full p-3 outline-slate-600 rounded-3xl'
-                                    placeholder='ProjectName'
-                                    value={projectName}
-                                    onChange={(e) => setProjectName(e.target.value)}
-                                />
-                            </div>
-                        </div>
-
                         {/* Describe what you did at internship */}
                         <div className='flex flex-col'>
-                            <h1 className='font-medium'>Project  name</h1>
+                            <h1 className='font-medium'>Project  Description</h1>
                             <div className='flex gap-3 m-2'>
                                 <textarea
                                     type="text"

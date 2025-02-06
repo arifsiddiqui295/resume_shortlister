@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import Button from './Button';
 import request from '../api/request.js';
+import { useStudent } from '../context/StudentProvider';
 const Student_Card = () => {
-
+    const { setStudent } = useStudent();
     const [isOpen, setIsOpen] = useState(false);
     const [dataPresent, setDataPresent] = useState();
     const [fullName, setFullName] = useState();
@@ -56,10 +57,97 @@ const Student_Card = () => {
         setLocation(studentDetails.location)
         setHometown(studentDetails.hometown)
     }
-
+    useEffect(() => {
+        const student_information = async () => {
+            try {
+                const res = await request("get", "/student/");
+                if (res.length > 0) {
+                    setStudentDetails(res[0]); // Store full student data
+                    setStudent(res[0].enrollment_no); // Store enrollment number in Context
+                }
+            } catch (error) {
+                console.error("Error fetching student details:", error);
+            }
+        };
+        student_information();
+    }, [setStudent]);
     return (
         <>
-            <div className='px-32 py-10'>
+            <div className="bg-white p-6 shadow-md rounded-lg max-w-3xl mx-auto">
+                {/* Header Section */}
+                <div className="flex justify-between items-center border-b pb-4 mb-4">
+                    <div className="flex items-center gap-4">
+                        {/* Profile Image */}
+                        <img
+                            src="https://images.unsplash.com/photo-1590411506193-00ed62b2d08d?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                            alt="Profile"
+                            className="w-12 h-12 object-cover rounded-full"
+                        />
+                        <div>
+                            <div className="flex items-center gap-2">
+                                <h2 className="text-lg font-semibold">{studentDetails.first_name} {studentDetails.last_name}</h2>
+                                {/* <Lock className="w-4 h-4 text-red-500" /> */}
+                            </div>
+                            <p className="text-sm text-gray-500 flex items-center gap-1">
+                                {/* <CheckCircle className="w-3 h-3 text-green-500" /> Active */}
+                            </p>
+                        </div>
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="flex gap-2">
+                        <button className="px-3 py-1 border rounded text-gray-700 text-sm">User object</button>
+                        <button
+                            onClick={() => {
+                                setIsOpen(true)
+                            }}
+                            className="px-3 py-1 border rounded text-gray-700 text-sm flex items-center gap-1">
+                            {/* <Edit className="w-4 h-4" />  */}
+                            Edit profile
+                        </button>
+                        <button className="p-2 text-gray-500 hover:bg-gray-100 rounded">
+                            {/* <MoreHorizontal className="w-5 h-5" /> */}
+                        </button>
+                    </div>
+                </div>
+
+                {/* User Info */}
+                <div className="grid grid-cols-2 gap-4 text-sm text-gray-700">
+                    <div>
+                        <p className="font-medium">Enrollment Number</p>
+                        <p className="text-gray-500">{studentDetails.enrollment_no}</p>
+                    </div>
+                    <div>
+                        <p className="font-medium">Password</p>
+                        <p className="text-gray-500">None</p>
+                    </div>
+                    <div>
+                        <p className="font-medium">Location</p>
+                        <p className="text-gray-500">{studentDetails.current_location}</p>
+                    </div>
+                    <div>
+                        <p className="font-medium">Gender</p>
+                        <p className="text-gray-500">{studentDetails.gender}</p>
+                    </div>
+                    <div>
+                        <p className="font-medium">Mobile number</p>
+                        <p className="text-gray-500">{studentDetails.mobile_number}</p>
+                    </div>
+                    <div>
+                        <p className="font-medium">Branch</p>
+                        <p className="text-gray-500">{studentDetails.branch}</p>
+                    </div>
+                    <div>
+                        <p className="font-medium">Email address</p>
+                        <p className="text-gray-500">{studentDetails.email}</p>
+                    </div>
+                    <div>
+                        <p className="font-medium">Date of Birth</p>
+                        <p className="text-gray-500">{studentDetails.dob}</p>
+                    </div>
+                </div>
+            </div>
+            {/* <div className='px-32 py-10'>
                 <div className='w-full flex bg-[#ffffff] shadow-lg px-5 rounded-lg py-16'>
                     <div className='flex items-center gap-10'>
                         <div className='flex gap-16 items-center'>
@@ -68,7 +156,7 @@ const Student_Card = () => {
                                 <div className='flex flex-col text-left'>
                                     <div className='flex items-center gap-2 text-white mb-10'>
                                         <h1 className='text-black text-3xl'>
-                                            {studentDetails.fullName}</h1>
+                                            {studentDetails.enrollment_no}</h1>
                                         <i
                                             onClick={updateDetails}
                                             className="ri-pencil-line text-[#717B9E] mt-1 text-2xl "></i>
@@ -77,7 +165,7 @@ const Student_Card = () => {
                                         <div className='flex flex-col gap-4'>
                                             <div className='flex gap-3 items-center'>
                                                 <i className="ri-map-pin-line text-[#717B9E]"></i>
-                                                <p className='text-[#275DF5] text-lg font-medium'> {studentDetails.location}</p>
+                                                <p className='text-[#275DF5] text-lg font-medium'> {studentDetails.current_location}</p>
                                             </div>
                                             <div className='flex gap-3 items-center'>
                                                 <i className="ri-men-line text-[#717B9E]"></i>
@@ -85,14 +173,14 @@ const Student_Card = () => {
                                             </div>
                                             <div className='flex gap-3 items-center'>
                                                 <i className="ri-cake-2-line text-[#717B9E]"></i>
-                                                <p className='text-[#275DF5] text-lg font-medium'> {studentDetails.date}</p>
+                                                <p className='text-[#275DF5] text-lg font-medium'> {studentDetails.dob}</p>
                                             </div>
                                         </div>
                                         <div className='flex flex-col gap-4'>
                                             <div className='flex items-center gap-2'>
                                                 <div className='flex gap-3 items-center'>
                                                     <i className="ri-phone-line text-[#717B9E]"></i>
-                                                    <p className='text-[#717B9E] text-lg font-medium'>{studentDetails.number}</p>
+                                                    <p className='text-[#717B9E] text-lg font-medium'>{studentDetails.mobile_number}</p>
                                                 </div>
                                                 <a href="" className='text-[#275DF5] font-bold'>Verify</a>
                                             </div>
@@ -120,51 +208,12 @@ const Student_Card = () => {
                             )
                             }
                         </div>
-                        <div className='w-96 flex flex-col gap-5 rounded-lg px-7 py-5 bg-[#CEDEFF]'>
-                            <div className='flex justify-between items-center '>
-                                <div className='flex gap-2 items-center'>
-                                    <div className='w-12 h-12 rounded-full bg-white flex items-center justify-center'>
-                                        <i className="ri-graduation-cap-line text-3xl font-mono text-[#717B9E]"></i>
-                                    </div>
-                                    <p className='text-md font-semibold'>Add Education</p>
-                                </div>
-                                <div className='flex gap-2 bg-white items-center w-20 h-7 px-2 rounded-2xl text-green-400 text-xl'>
-                                    <i className="ri-arrow-up-line "></i>
-                                    <p>10%</p>
-                                </div>
-                            </div>
-                            <div className='flex justify-between items-center '>
-                                <div className='flex gap-2 items-center'>
-                                    <div className='w-12 h-12 rounded-full bg-white flex items-center justify-center'>
-                                        <i className="ri-mobile-download-line text-3xl font-mono text-[#717B9E]"></i>
-                                    </div>
-                                    <p className='text-md font-semibold'>Verify Mobile</p>
-                                </div>
-                                <div className='flex gap-2 bg-white items-center w-20 h-7 px-2 rounded-2xl text-green-400 text-xl'>
-                                    <i className="ri-arrow-up-line "></i>
-                                    <p>10%</p>
-                                </div>
-                            </div>
-                            <div className='flex justify-between items-center '>
-                                <div className='flex gap-2 items-center'>
-                                    <div className='w-12 h-12 rounded-full bg-white flex items-center justify-center'>
-                                        <i className="ri-graduation-cap-line text-3xl font-mono text-[#717B9E]"></i>
-                                    </div>
-                                    <p className='text-md font-semibold'>Add Details</p>
-                                </div>
-                                <div className='flex gap-2 bg-white items-center w-20 h-7 px-2 rounded-2xl text-green-400 text-xl'>
-                                    <i className="ri-arrow-up-line "></i>
-                                    <p>10%</p>
-                                </div>
-                            </div>
-                            <Button text="Add 16 missing details" className='bg-[#275df5] rounded-2xl py-3 text-white ' />
-                        </div>
                     </div>
                     <div>
 
                     </div>
                 </div>
-            </div>
+            </div> */}
             {isOpen && (
                 <div className="fixed inset-0 z-[80] bg-black bg-opacity-50 flex items-center justify-center">
                     <div className="bg-white border shadow-sm rounded-xl w-[70%] h-[70%] overflow-y-auto p-6">
