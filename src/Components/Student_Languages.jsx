@@ -44,10 +44,12 @@ const Student_Languages = () => {
     useEffect(() => {
         const student_languages = async () => {
             const res = await request('get', `/languages/`);
-            // console.log("res: ", res[0]);
-            setSelectedLanguages(res[0].languages)
-            setPrimaryKey(res[0].id);
-            // console.log("primaryKey:", primaryKey);
+            // console.log("res: ", res);
+            if (res.length>0) {
+                setSelectedLanguages(res[0].languages)
+                setPrimaryKey(res[0].id);
+                // console.log("primaryKey:", primaryKey);
+            }
         }
         student_languages()
     }, []);

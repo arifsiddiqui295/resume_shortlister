@@ -7,6 +7,11 @@ const Student_Certifications = () => {
     const [inputValue, setInputValue] = useState('');
     const [projectName, setProjectName] = useState('');
     const [companyName, setCompanyName] = useState('');
+    const [certificateName, setCertificateName] = useState('');
+    const [organizationName, setOrganizationName] = useState('');
+    const [issueDate, setIssueDate] = useState();
+    const [credentials, setCredentials] = useState('');
+    const [skills, setSkills] = useState('');
     const [projectDescription, setProjectDescription] = useState('');
     const [gitHubLink, setGitHubLInk] = useState('');
     const [liveLink, setLiveLink] = useState();
@@ -158,56 +163,86 @@ const Student_Certifications = () => {
 
                         {/* Company name */}
                         <div className='flex flex-col py-5'>
-                            <h1 className='font-medium'>Certificate name</h1>
+                            <h1 className='font-medium'>Company name</h1>
                             <div className='flex gap-3 m-2'>
                                 <input
                                     type="text"
                                     className='border-2 border-gray-400 w-full p-3 outline-slate-600 rounded-3xl'
-                                    placeholder='Certificate name'
+                                    placeholder='Company name'
                                     value={companyName}
                                     onChange={(e) => setCompanyName(e.target.value)}
                                 />
                             </div>
                         </div>
-                        {/* Project  name*/}
-                        <div className='flex flex-col py-5'>
+
+                        {/* Organization name */}
+                        <div className='flex flex-col '>
                             <h1 className='font-medium'>Organization name</h1>
                             <div className='flex gap-3 m-2'>
                                 <input
                                     type="text"
                                     className='border-2 border-gray-400 w-full p-3 outline-slate-600 rounded-3xl'
                                     placeholder='Organization name'
-                                    value={projectName}
-                                    onChange={(e) => setProjectName(e.target.value)}
+                                    value={organizationName}
+                                    onChange={(e) => setOrganizationName(e.target.value)}
                                 />
                             </div>
                         </div>
 
-                        {/* Describe what you did at internship */}
-                        <div className='flex flex-col'>
-                            <h1 className='font-medium'>Certification Description</h1>
+                        {/* Issue date */}
+                        <div className='flex flex-col py-5'>
+                            <h1 className='font-medium'>Issued date</h1>
                             <div className='flex gap-3 m-2'>
-                                <textarea
+                                <input
                                     type="text"
-                                    className='border-2 border-gray-400 w-full p-3 outline-slate-600 rounded-xl'
-                                    placeholder='Certification Description'
-                                    value={projectDescription}
-                                    onChange={(e) => setProjectDescription(e.target.value)}
+                                    className='border-2 border-gray-400 w-full p-3 outline-slate-600 rounded-3xl'
+                                    placeholder='Month'
+                                    value={issueDate}
+                                    onChange={(e) => setIssueDate.month(e.target.value)}
+                                />
+                                <input
+                                    type="text"
+                                    className='border-2 border-gray-400 w-full p-3 outline-slate-600 rounded-3xl'
+                                    placeholder='Year'
+                                    value={issueDate}
+                                    onChange={(e) => setIssueDate.year(e.target.value)}
+                                />
+                            </div>
+                        </div>
+
+                        {/* Credentials*/}
+                        <div className='flex flex-col'>
+                            <h1 className='font-medium'>Certificate ID</h1>
+                            <div className='flex gap-3 m-2'>
+                                <input
+                                    type="text"
+                                    className='border-2 border-gray-400 w-full p-3 outline-slate-600 rounded-3xl'
+                                    placeholder='Certificate ID'
+                                    value={credentials}
+                                    onChange={(e) => setCredentials(e.target.value)}
+                                />
+                            </div>
+                        </div>
+
+                        {/* Skills*/}
+                        <div className='flex flex-col py-5'>
+                            <h1 className='font-medium'>Skills</h1>
+                            <div className='flex gap-3 m-2'>
+                                <input
+                                    type="text"
+                                    className='border-2 border-gray-400 w-full p-3 outline-slate-600 rounded-3xl'
+                                    placeholder='Search Skills'
+                                    value={skills}
+                                    onChange={(e) => setSkills(e.target.value)}
                                 />
                             </div>
                         </div>
                         <div className='flex justify-end gap-2'>
-                            {isEdit ? (
-                                <button
-                                    onClick={removeInternship}
-                                    className='text-[#275df5] font-semibold'>Remove Internship</button>
-                            ) : (
-                                <button
-                                    onClick={closeModal}
-                                    className='text-[#275df5] font-semibold'>I'll add this later</button>
-                            )}
+                            <button 
+                            // onClick={() => deleteProfileSummary()}
+                             className='text-[#275df5] font-semibold'>Delete</button>
                             <button
-                                onClick={addInternship}
+                                // onClick={saveProfileSummary}
                                 className='bg-[#275df5] text-white px-3 py-2 rounded-xl'>Save Changes</button>
                         </div>
                     </div>

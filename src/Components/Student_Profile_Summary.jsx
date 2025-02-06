@@ -14,9 +14,9 @@ const Student_Profile_Summary = () => {
         // console.log(inputValue)
         console.log(profileSummary)
         const response = await request('post', "/summary/", { summary: profile_summary, student });
-        console.log("response:", response)
+        console.log("response:", response.summary)
         setProfileSummary(inputValue)
-        // setIsModalOpen(false)
+        setIsModalOpen(false)
     }
     const handleInputChange = (e) => {
         const words = e.target.value.split(" ");
@@ -28,16 +28,34 @@ const Student_Profile_Summary = () => {
             toast.error("Only 50 words allowed.");
         }
     };
+    const deleteProfileSummary = async () => {
+        console.log("Primary KEY:", primaryKey)
+        const res = await request('DELETE', `/summary/${primaryKey}/`);
+        setProfileSummary('')
+        setInputValue('');
+        setIsModalOpen(false);
+        console.log("res:", res);
+    }
     useEffect(() => {
-        const response = await request('post', "/summary/", { summary: profile_summary, student });
-    }, [])
+        const getProfileSummaryFromServer = async () => {
+            const res = await request('get', '/summary/');
+            console.log("res from profile summary: ", res)
+            if(res.length>0){
+                setProfileSummary(res[0].summary)
+                setInputValue(res[0].summary)
+                console.log("primary id",res[0].id);
+                setPrimaryKey(res[0].id)
+            }
+        }
+        getProfileSummaryFromServer();
+    }, [profileSummary])
     return (
         <>
             <ToastContainer position="top-right" autoClose={3000} hideProgressBar={true} />
             <div>
                 <div className="bg-white rounded-lg p-6 shadow-md w-[60vw]">
                     <div className="flex justify-between items-center  ">
-                        <h2 className="text-lg font-semibold">Profile Summary</h2>
+                        <h2 className="text-lg font-semibold">Profile Summary </h2>
                         <button
                             onClick={() => setIsModalOpen(true)}
                             className="text-[#275DF5] text-md font-semibold">Add/ Edit</button>
@@ -49,7 +67,7 @@ const Student_Profile_Summary = () => {
                             </div>
 
                         ) : (<div>
-                            Your Profile Summary should mention the highlights of your career and education, what your professional interests are, and what kind of a career you are looking for. Write a meaningful summary of more than 50 characters.
+                            No summary added till
                         </div>
                         )
                         }
@@ -104,7 +122,7 @@ const Student_Profile_Summary = () => {
                             </div>
                         </div>
                         <div className='flex justify-end gap-2'>
-                            <button onClick={() => setIsModalOpen(false)} className='text-[#275df5] font-semibold'>I'll add this later</button>
+                            <button onClick={() => deleteProfileSummary()} className='text-[#275df5] font-semibold'>Delete</button>
                             <button
                                 onClick={saveProfileSummary}
                                 className='bg-[#275df5] text-white px-3 py-2 rounded-xl'>Save Changes</button>
