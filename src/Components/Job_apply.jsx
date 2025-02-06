@@ -3,7 +3,7 @@ import Button from './Button'
 
 const Job_apply = () => {
     return (
-        <div className='flex justify-between bg-[#CEDEFF] p-4 rounded-lg items-center hover:border-white hover:bg-[#6d96e8] hover:text-white transition-all ease-in-out duration-300 hover:scale-105
+        <div className=' md:flex-row flex flex-col justify-between bg-[#CEDEFF] p-4 rounded-lg items-center hover:border-white hover:bg-[#6d96e8] hover:text-white transition-all ease-in-out duration-300 hover:scale-105
         '>
             <div className='flex gap-5'>
                 <img
