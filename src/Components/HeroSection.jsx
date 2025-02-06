@@ -2,86 +2,52 @@ import { FaFacebook, FaInstagram, FaLinkedin } from "react-icons/fa";
 import { IoSearch } from "react-icons/io5";
 
 export default function HeroSection() {
-    return (
-        <div>
-
-            <div className="flex flex-col md:flex-row h-fit px-4 py-2  bg-gray-50">
-                {/* Left Section */}
-                <div className="md:w-1/2 flex flex-col justify-center items-center bg-gradient-to-br from-blue-600 to-indigo-700 text-white p-12 rounded-r-[3rem] rounded-l-[3rem] shadow-xl">
-                    <div className="max-w-lg">
-                        <h1 className="text-5xl md:text-6xl font-bold leading-tight">
-                            Find <span className="text-blue-300">Talent</span>
-                        </h1>
-                        <p className="mt-6 text-lg text-blue-200">
-                            Aggregates job opportunities from multiple sources.
-                        </p>
-
-                        {/* Feature Highlights */}
-                        <div className="mt-12 space-y-5">
-                            {[
-                                "Seamless Application Process",
-                                "Personalized Job Alerts",
-                                "Salary Insights",
-                                "Company Reviews"
-                            ].map((text, idx) => (
-                                <div
-                                    key={idx}
-                                    className={`p-5 rounded-xl backdrop-blur-sm hover:scale-105 transition-transform
-                                    ${idx % 2 === 0 ? 'bg-blue-500/30' : 'bg-indigo-500/30'}`}
-                                >
-                                    <div className="flex items-center space-x-4">
-                                        <div className={`w-3 h-3 rounded-full ${idx % 2 === 0 ? 'bg-blue-300' : 'bg-indigo-300'}`} />
-                                        <span className="text-lg font-medium">{text}</span>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-
-                {/* Right Section */}
-                <div className="md:w-1/2 flex flex-col justify-center items-center p-12">
-                    <div className="max-w-md w-full text-center">
-                        <h2 className="text-5xl font-bold text-gray-800 leading-snug">
-                            Transforming <br /> <span className="text-blue-600">Job Search</span> Experience
-                        </h2>
-                        <p className="mt-5 text-lg text-gray-600">
-                            Explore an extensive database of jobs from top companies.
-                        </p>
-
-                        {/* Search Bar */}
-                        <div className="mt-8 relative">
-                            <div className="relative flex items-center bg-white rounded-full shadow-lg hover:shadow-xl transition-shadow">
-                                <input
-                                    type="text"
-                                    placeholder="Occupation, company, or role..."
-                                    className="flex-grow pl-6 pr-4 py-3 focus:outline-none text-gray-800 placeholder-gray-400"
-                                />
-                                <button className="flex items-center justify-center w-12 h-12 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition">
-                                    <IoSearch size={24} />
-                                </button>
-                            </div>
-                        </div>
-
-                        {/* Buttons */}
-                        <div className="mt-8 flex space-x-4">
-                            <button className="flex-1 px-8 py-4 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700 transition">
-                                Get Vacancy
-                            </button>
-                            <button className="flex-1 px-8 py-4 bg-gray-100 text-gray-700 rounded-full font-semibold hover:bg-gray-200 transition">
-                                Upload Resume
-                            </button>
-                        </div>
-
-                        {/* Social Icons */}
-                        <div className="mt-12 flex justify-center space-x-6 text-gray-500">
-                            <FaFacebook size={28} className="hover:text-blue-600 transition" />
-                            <FaInstagram size={28} className="hover:text-pink-600 transition" />
-                            <FaLinkedin size={28} className="hover:text-blue-800 transition" />
-                        </div>
-                    </div>
-                </div>
-            </div>
+  return (
+    // Hero Section
+    <div>
+      <div className="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
+        <div className="hidden sm:mb-8 sm:flex sm:justify-center">
+          <div className="relative rounded-full px-3 py-1 text-sm/6 text-gray-600 ring-1 ring-gray-900/10 hover:ring-gray-900/20">
+            Announcing our next round of funding.{" "}
+            <a href="#" className="font-semibold text-indigo-600">
+              <span aria-hidden="true" className="absolute inset-0" />
+              Read more <span aria-hidden="true">&rarr;</span>
+            </a>
+          </div>
         </div>
-    );
+        <div className="text-center">
+          <h1 className="text-5xl font-semibold tracking-tight text-balance text-gray-900 sm:text-7xl">
+            Data to enrich your online business
+          </h1>
+          <p className="mt-8 text-lg font-medium text-pretty text-gray-500 sm:text-xl/8">
+            Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui
+            lorem cupidatat commodo. Elit sunt amet fugiat veniam occaecat.
+          </p>
+          <div className="mt-10 flex items-center justify-center gap-x-6">
+            <a
+              href="#"
+              className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            >
+              Get started
+            </a>
+            <a href="#" className="text-sm/6 font-semibold text-gray-900">
+              Learn more <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div
+        aria-hidden="true"
+        className="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]"
+      >
+        <div
+          style={{
+            clipPath:
+              "polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)",
+          }}
+          className="relative left-[calc(50%+3rem)] aspect-1155/678 w-[36.125rem] -translate-x-1/2 bg-linear-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%+36rem)] sm:w-[72.1875rem]"
+        />
+      </div>
+    </div>
+  );
 }

@@ -4,9 +4,9 @@ import Section from "./Section";
 
 const Home_talent = () => {
     return (
-        <div className="flex justify-between">
+        <div className="flex justify-between flex-wrap md:flex-row flex-col ">
             <Section
-                className="py-10 px-16 w-1/2"
+                className="py-10 md:px-16 px-8 w-full md:w-1/2"
                 heading="Why Ambitious Talent Relies on Us"
                 text1="Apply directly to companies and internship opportunities available through on-campus placements."
                 text2="Everything you need to know, all upfront. View salary, stock options, and more before applying."
@@ -14,7 +14,7 @@ const Home_talent = () => {
                 text4="A reliable on-campus MNC known for mass hiring, trusted in the industry."
             />
             <Section
-                className="bg-[#F2F4FF] py-10 px-16 w-1/2"
+                className="bg-[#F2F4FF] w-full py-10 md:px-16 px-8  md:w-1/2"
                 heading="Why Top Recruiters Rely on Us"
                 text1="Tap into a community of 10lakh+ engaged, company ready candidates."
                 text2="Everything you need to kickstart your recruiting — set

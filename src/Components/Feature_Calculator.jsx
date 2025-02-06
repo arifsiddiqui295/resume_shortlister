@@ -2,12 +2,12 @@ import React from 'react'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 const Feature_Calculator = () => {
     return (
-        <div className="relative bg-[#2B308B] text-white rounded-xl p-6 w-1/2 overflow-hidden">
-        <div className="text-lg font-semibold uppercase mb-2">Get Featured</div>
+        <div className="relative bg-[#2B308B] text-white rounded-xl p-10 mb-3  w-full md:w-1/2 overflow-hidden">
+        <div className="text-lg w-full font-semibold uppercase mb-2">Get Featured</div>
         <h2 className="text-3xl font-bold mb-28">Let us show you off</h2>
         <div className="flex justify-between items-start">
-          <div className="flex flex-col items-start justify-start w-3/4">
-            <p className="text-md mb-6 text-left">
+          <div className="flex  flex-col items-start justify-start w-full md:w-3/4">
+            <p className="text-md  mb-6 text-left">
               Apply to be featured and let the opportunities come to you. We'll highlight your profile to top recruiters and companies searching for your skills.
             </p>
             <p className="text-sm mb-6">Oh, it's also 100% free.</p>
