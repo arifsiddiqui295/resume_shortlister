@@ -1,132 +1,119 @@
 import React, { useEffect, useState } from 'react'
-import Student_School_Education from './Student_School_Education';
-import Student_College_Education from './Student_College_Education';
 import request from '../api/request';
+import { useStudent } from '../context/StudentProvider';
 
 const Student_Education = () => {
-
+    const { student } = useStudent();
     const [isOpen, setIsOpen] = useState(false);
-    const [isSchoolEdit, setIsSchoolEdit] = useState(false);
-    const [isCollegeEdit, setIsCollegEdit] = useState(false);
-    const [isClass, setIsClass] = useState();
-    const [isCollege, setisCollege] = useState(false);
-    const [college, setCollege] = useState();
-    const [qualification, setQualification] = useState(false);
-    const [schoolInfo, setSchoolInfo] = useState([]);
-    const [collegeInfo, setCollegeInfo] = useState([]);
-    const [schoolUpdateInfo, setSchoolUpdateInfo] = useState({});
-    const [collegeUpdateInfo, setCollegeUpdateInfo] = useState({});
+    const [educationData, setEducationData] = useState({
+        qualification: "",
+        board_university: "",
+        medium: "",
+        branch: "",
+        percentage_cgpa: "",
+        school_college_name: "",
+        start_year: "",
+        passing_year: ""
+    });
     const [educationDetails, setEducationDetails] = useState([]);
-
-    useEffect(() => {
-        const studentEducationDetails = async () => {
-            const res = await request('get', '/education/')
-            // console.log('res: ', res);
-            setEducationDetails(res);
-            // console.log('educationDetails: ', educationDetails);
-        }
-        studentEducationDetails();
-    },[])
-    const handleSaveCollege = (newCollege) => {
-        console.log(newCollege)
-        setCollegeInfo((prevQualificationInfo) => {
-            // Filter out any existing entry with the same grade_Program (Class X or Class XII)
-            const updatedInfo = prevQualificationInfo.filter(
-                (item) => item.college !== newCollege.college
-            );
-
-            // Add the new or updated class information
-            return [...updatedInfo, newCollege];
-        });
-
-    }
-    const handleSaveClass = (newClass) => {
-        console.log(newClass)
-        setSchoolInfo((prevQualificationInfo) => {
-            // Filter out any existing entry with the same grade_Program (Class X or Class XII)
-            const updatedInfo = prevQualificationInfo.filter(
-                (item) => item.grade_Program !== newClass.grade_Program
-            );
-
-            // Add the new or updated class information
-            return [...updatedInfo, newClass];
-        });
-
-        setIsSchoolEdit(false); // Exit edit mode
-        setIsOpen(false); // Close the modal
+    const [isEdit, setIsEdit] = useState(false);
+    const [primaryKey, setPrimaryKey] = useState('');
+    const handleChange = (e) => {
+        setEducationData({ ...educationData, [e.target.name]: e.target.value });
     };
-    const editCollegeEducatoin = (college, grade_Program, schoolName_CollegName, board_specialization, percent_cgpa, startYear, passingYear) => {
-        // console.log(college, grade_Program, schoolName_CollegName, board_specialization, percent_cgpa, startYear, passingYear)
-        const update_education = {
-            college: college,
-            grade_Program: grade_Program,
-            schoolName_CollegName: schoolName_CollegName,
-            board_specialization: board_specialization,
-            percent_cgpa: percent_cgpa,
-            startYear: startYear,
-            passingYear: passingYear
-        }
-        // console.log("update_education", update_education);
-        setCollegeUpdateInfo(update_education)
-        setIsCollegEdit(true)
-        setIsOpen(true)
-        setQualification(true)
 
+    const saveEducation = async () => {
+        try {
+            const newEducation = {
+                qualification: educationData.qualification,
+                board_university: educationData.board_university,
+                medium: educationData.medium,
+                branch: educationData.branch,
+                percentage_cgpa: educationData.percentage_cgpa,
+                school_college_name: educationData.school_college_name,
+                start_year: educationData.start_year,
+                passing_year: educationData.passing_year,
+                student: student
+            }
+            if (isEdit) {
+                const res = await request('patch', `/education/${primaryKey}/`, newEducation)
+                // console.log("res from update:", res);
+                const updateEducation = educationDetails.map(education =>
+                    education.id === res.id ? { ...education, ...res } : education
+                );
+                // console.log(updateEducation);
+                setEducationDetails(updateEducation);
+                setIsOpen(false);
+                setIsEdit(false);
+                closeModal();
+            } else {
+                const res = await request('post', '/education/', newEducation)
+                const updateEducation = [...educationDetails, res];
+                // console.log(updatedInternships);
+                setEducationDetails(updateEducation);
+                // setPrimaryKey(res.id);
+                setIsOpen(false);
+                // console.log("res from post", res);
+            }
+            // console.log("res from student education: ", res);
+        } catch (error) {
+            console.log("error from Student_Education: ", error)
+        }
+    };
+
+    const updateEducation = async (education) => {
+        // console.log("Primary Key", primaryKey)
+        // console.log(education)
+        setPrimaryKey(education.id)
+        setEducationData({
+            qualification: education.qualification || "",
+            board_university: education.board_university || "",
+            medium: education.medium || "",
+            branch: education.branch || "",
+            percentage_cgpa: education.percentage_cgpa || "",
+            school_college_name: education.school_college_name || "",
+            start_year: education.start_year || "",
+            passing_year: education.passing_year || ""
+        });
+        setIsEdit(true);
+        setIsOpen(true);
+        // const res = await request('patch')
     }
-
-    const editSchoolEducation = (grade_Program, schoolName_CollegName, board_specialization, medium_university, percent_cgpa, passingYear) => {
-        console.log(grade_Program, schoolName_CollegName, board_specialization, medium_university, percent_cgpa, passingYear)
-        const updateEducation = {
-            grade_Program: grade_Program,
-            schoolName_CollegName: schoolName_CollegName,
-            board_specialization: board_specialization,
-            medium_university: medium_university,
-            percent_cgpa: percent_cgpa,
-            passingYear: passingYear
+    useEffect(() => {
+        const getStudentEducationDetails = async () => {
+            try {
+                const res = await request('get', '/education/');
+                // console.log("res from student Education: ", res);
+                const matchedStudentEducation = res.filter(edu => edu.student === student);
+                // console.log("matchedStudentEducation: ", matchedStudentEducation);
+                if (matchedStudentEducation) {
+                    // Set only the common fields
+                    setEducationDetails(matchedStudentEducation);
+                    setPrimaryKey(matchedStudentEducation.id);
+                }
+                // console.log("educationDetails: ", educationDetails)
+            } catch (error) {
+                console.log("Error:", error);
+            }
         }
-        setSchoolUpdateInfo(updateEducation)
-        setIsSchoolEdit(true);
-        setIsOpen(true)
-        setQualification(true)
-    }
-    const degreeSelection = (value) => {
-        // console.log(value)
-        if (value == 0) {
-            setIsClass('Class X')
-            setisCollege(false)
-        } else if (value == 1) {
-            setIsClass('Class XII')
-            setisCollege(false)
-        } else if (value == 2) {
-            setisCollege(true)
-            setCollege('Graduation')
-        }
-        else if (value == 3) {
-            setisCollege(true)
-            setCollege('Post Graduation')
-        }
-        else if (value == 4) {
-            setisCollege(true)
-            setCollege('Doctorate')
-        }
-        setQualification(true)
-    }
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //         const combinedData = {
-    //             collegeInfo,
-    //             schoolInfo
-    //         };
-    //         console.log(combinedData);
+        getStudentEducationDetails();
+    }, [])
+    const isSchoolLevel = ["Class 10", "Class 12"].includes(educationData.qualification);
+    const isCollegeLevel = !isSchoolLevel && educationData.qualification !== "";
 
-    //         // const response = await request('post', "/", combinedData);
-    //         // console.log(response);
-    //     };
-
-    //     fetchData();
-    // }, [college, collegeInfo, schoolInfo]);
-
-    const options = ['Class X', 'Class XII', 'Graduation', 'Post Graduation', 'Doctorate']
+    const closeModal = () => {
+        setEducationData({
+            qualification: "",
+            board_university: "",
+            medium: "",
+            branch: "",
+            percentage_cgpa: "",
+            school_college_name: "",
+            start_year: "",
+            passing_year: ""
+        });
+        setIsOpen(false);
+    };
     return (
         <>
             <div className="bg-white  rounded-lg p-6 shadow-md w-[60vw]">
@@ -142,149 +129,184 @@ const Student_Education = () => {
                     </button>
                 </div>
                 <div className="flex flex-col gap-6 mt-4">
-                    {educationDetails && (
-                        educationDetails.map((value, index) => (
-                            <div key={index}>
-                                <div className='flex gap-1 items-center'>
-                                    <h1 className='text-xl font-semibold'>{value.qualification} From {value.school_college_name} </h1>
-                                    <i
-                                        onClick={() => editSchoolEducation(
-                                            value.grade_Program,
-                                            value.schoolName_CollegName,
-                                            value.board_specialization,
-                                            value.medium_university,
-                                            value.percent_cgpa,
-                                            value.passingYear
-                                        )}
-                                        className="ri-pencil-line text-gray-500"></i>
-                                </div>
-                                <div className=' text-[#1a192b]'>
-                                    <div className='flex '>
-                                        <p className=''>{value.board_university}, {value.medium} </p>
-                                        {value.medium_university && (
-                                            <p className=''> </p>
-                                        )}
+                    {
+                        educationDetails.length > 0 ? (
+                            educationDetails.map((education, index) => (
+                                <div key={index}>
+                                    <div className='flex gap-1 items-center'>
+                                        <h1 className='text-xl font-semibold'>
+                                            {education.qualification} from {education.school_college_name}
+                                        </h1>
+                                        <i
+                                            onClick={() => { updateEducation(education) }}
+                                            className="ri-pencil-line text-gray-500 cursor-pointer"
+                                        ></i>
+                                    </div>
+                                    <div className='text-[#1a192b]'>
+                                        <div className='flex'>
+                                            <p className=''>
+                                                {education.board_university},
+                                                {
+                                                    isCollegeLevel ? (
+                                                        education.branch
+                                                    ) : (
+                                                        education.medium
+                                                    )
+                                                }
+
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div className='flex'>
+                                        <p className='text-[#818aa9]'>
+                                            Scored {education.percentage_cgpa}, {education.start_year}-{education.passing_year}
+                                        </p>
                                     </div>
                                 </div>
-                                <div className='flex'>
-                                    <p className='text-[#818aa9]'>Scored {value.percentage_cgpa} CGPA, {value.passing_year}</p>
-                                    {/* <p className='text-[#818aa9]'></p> */}
-                                </div>
-                            </div>
-                        ))
-                    )}
-                    {collegeInfo && (
-                        collegeInfo.map((value, index) => (
-                            <div key={index}>
-                                <div className='flex gap-1 items-center'>
-                                    <h1 className='text-xl font-semibold'>{value.grade_Program} From {value.schoolName_CollegName} </h1>
-                                    <i
-                                        onClick={() => editCollegeEducatoin(
-                                            value.college,
-                                            value.grade_Program,
-                                            value.schoolName_CollegName,
-                                            value.board_specialization,
-                                            value.percent_cgpa,
-                                            value.startYear,
-                                            value.passingYear
-                                        )}
-                                        className="ri-pencil-line text-gray-500"></i>
-                                </div>
-                                <div className=' text-[#1a192b]'>
-                                    <div className='flex '>
-                                        <p className=''>{value.board_specialization}</p>
-                                    </div>
-                                </div>
-                                <div className='flex'>
-                                    <p className='text-[#818aa9]'>Scored {value.percent_cgpa} CGPA , {value.startYear}-{value.passingYear} </p>
-                                    <p className='text-[#818aa9]'></p>
-                                </div>
-                            </div>
-                        ))
-                    )}
+                            ))
+
+                        ) : (
+                            <p>Education details not added</p>
+                        )
+                    }
                 </div>
             </div>
 
             {/* Modal */}
+
             {isOpen && (
                 <div
                     className="fixed  inset-0 z-[80]  bg-black bg-opacity-50 flex items-center justify-center"
                 >
-                    <div className="bg-white border shadow-sm rounded-xl w-[70%] h-[40%] overflow-y-auto p-6">
-                        <div className='flex justify-end '>
-                            <button
-                                type="button"
-                                className="ml-auto inline-flex justify-center items-center gap-x-2 rounded-full focus:outline-none"
-                                onClick={() => {
-                                    setIsOpen(false)
-                                    setIsSchoolEdit(false)
-                                    setQualification(false)
-                                }} // Close modal
+                    <div className="p-8 bg-white h-[60%] overflow-y-auto rounded-xl shadow-2xl w-full max-w-lg mx-auto relative">
+                        {/* Close Button */}
+                        <button
+                            onClick={closeModal}
+                            className="absolute top-4 right-4 p-2 text-gray-500 hover:text-gray-700 transition-colors duration-200"
+                        >
+                            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+
+                        {/* Form Title */}
+                        <h2 className="text-2xl font-bold mb-6 text-gray-900">Education Details</h2>
+
+                        {/* Qualification Dropdown */}
+                        <div className="mb-6">
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Qualification</label>
+                            <select
+                                name="qualification"
+                                value={educationData.qualification}
+                                onChange={handleChange}
+                                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                             >
-                                <span className="sr-only">Close</span>
-                                <svg
-                                    className="w-6 h-6"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth={2}
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                >
-                                    <path d="M18 6 6 18" />
-                                    <path d="m6 6 12 12" />
-                                </svg>
-                            </button>
+                                <option value="">Select Qualification</option>
+                                <option value="Class 10">Class 10</option>
+                                <option value="Class 12">Class 12</option>
+                                <option value="B.Tech">B.Tech</option>
+                                <option value="B.Pharma">B.Pharma</option>
+                                <option value="MBA">MBA</option>
+                                <option value="M.Tech">M.Tech</option>
+                                <option value="PhD">PhD</option>
+                            </select>
                         </div>
 
-                        <div className="flex justify-between items-center py-3 px-4 border-b">
-                            <div>
-                                <h1 className='text-2xl font-semibold'>Education</h1>
-                                <p className='text-sm text-[#717b9e]'>Adding your educational details help recruiters know your value as a potential candidate</p>
+                        {/* Board/University */}
+                        <div className="mb-6">
+                            <label className="block text-sm font-medium text-gray-700 mb-2">{isSchoolLevel ? "Board" : "University"}</label>
+                            <input
+                                type="text"
+                                name="board_university"
+                                value={educationData.board_university}
+                                onChange={handleChange}
+                                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                            />
+                        </div>
+
+                        {/* Medium (Only for School Level) */}
+                        {isSchoolLevel && (
+                            <div className="mb-6">
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Medium</label>
+                                <input
+                                    type="text"
+                                    name="medium"
+                                    value={educationData.medium}
+                                    onChange={handleChange}
+                                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                />
                             </div>
-                        </div>
-                        <div className=' mt-6  gap-2 flex-wrap '>
-                            {qualification ? (
-                                isCollege ? (
-                                    <Student_College_Education
-                                        edit={isCollegeEdit}
-                                        updateInformation={isCollegeEdit ? collegeUpdateInfo : undefined}
-                                        gradP={!isCollegeEdit ? college : undefined}
-                                        onSave={handleSaveCollege}
-                                        closeModal={() => {
-                                            setIsOpen(false)
-                                            setQualification(false)
-                                        }}
-                                    />
-                                ) : (
-                                    <Student_School_Education
-                                        edit={isSchoolEdit}
-                                        updateInformation={isSchoolEdit ? schoolUpdateInfo : undefined}
-                                        gradP={!isSchoolEdit ? isClass : undefined}
-                                        onSave={handleSaveClass}
-                                        closeModal={() => {
-                                            setIsOpen(false)
-                                            setQualification(false)
-                                        }}
-                                    />
-                                )
-                            ) : (
+                        )}
 
-                                <div>
-                                    <h1>Qualification/Degree</h1>
-                                    <div className='flex mt-2 gap-2'>
-                                        {options.map((value, index) => (
-                                            <p
-                                                onClick={() => { degreeSelection(index) }}
-                                                className='flex items-center justify-center gap-2 px-4 py-2 border-2 border-gray-300 hover:bg-gray-200 rounded-full text-gray-600  focus:outline-none  '
-                                                key={index}>{value}</p>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
+                        {/* Branch (Only for College Level) */}
+                        {isCollegeLevel && (
+                            <div className="mb-6">
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Branch</label>
+                                <input
+                                    type="text"
+                                    name="branch"
+                                    value={educationData.branch}
+                                    onChange={handleChange}
+                                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                />
+                            </div>
+                        )}
+
+                        {/* Percentage/CGPA */}
+                        <div className="mb-6">
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Percentage/CGPA</label>
+                            <input
+                                type="text"
+                                name="percentage_cgpa"
+                                value={educationData.percentage_cgpa}
+                                onChange={handleChange}
+                                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                            />
                         </div>
 
+                        {/* School/College Name */}
+                        <div className="mb-6">
+                            <label className="block text-sm font-medium text-gray-700 mb-2">School/College Name</label>
+                            <input
+                                type="text"
+                                name="school_college_name"
+                                value={educationData.school_college_name}
+                                onChange={handleChange}
+                                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                            />
+                        </div>
+
+                        {/* Start Year */}
+                        <div className="mb-6">
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Start Year</label>
+                            <input
+                                type="number"
+                                name="start_year"
+                                value={educationData.start_year}
+                                onChange={handleChange}
+                                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                            />
+                        </div>
+
+                        {/* Passing Year */}
+                        <div className="mb-8">
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Passing Year</label>
+                            <input
+                                type="number"
+                                name="passing_year"
+                                value={educationData.passing_year}
+                                onChange={handleChange}
+                                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                            />
+                        </div>
+
+                        {/* Save Button */}
+                        <button
+                            onClick={saveEducation}
+                            className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all"
+                        >
+                            {educationData.id ? "Update Changes" : "Save Changes"}
+                        </button>
                     </div>
                 </div>
             )}

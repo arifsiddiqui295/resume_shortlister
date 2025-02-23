@@ -12,9 +12,9 @@ const Student_Profile_Summary = () => {
     const saveProfileSummary = async () => {
         const profile_summary = inputValue
         // console.log(inputValue)
-        console.log(profileSummary)
+        // console.log(profileSummary)
         const response = await request('post', "/summary/", { summary: profile_summary, student });
-        console.log("response:", response.summary)
+        // console.log("response:", response.summary)
         setProfileSummary(inputValue)
         setIsModalOpen(false)
     }
@@ -29,21 +29,21 @@ const Student_Profile_Summary = () => {
         }
     };
     const deleteProfileSummary = async () => {
-        console.log("Primary KEY:", primaryKey)
+        // console.log("Primary KEY:", primaryKey)
         const res = await request('DELETE', `/summary/${primaryKey}/`);
         setProfileSummary('')
         setInputValue('');
         setIsModalOpen(false);
-        console.log("res:", res);
+        // console.log("res:", res);
     }
     useEffect(() => {
         const getProfileSummaryFromServer = async () => {
             const res = await request('get', '/summary/');
-            console.log("res from profile summary: ", res)
+            // console.log("res from profile summary: ", res)
             if(res.length>0){
                 setProfileSummary(res[0].summary)
                 setInputValue(res[0].summary)
-                console.log("primary id",res[0].id);
+                // console.log("primary id",res[0].id);
                 setPrimaryKey(res[0].id)
             }
         }

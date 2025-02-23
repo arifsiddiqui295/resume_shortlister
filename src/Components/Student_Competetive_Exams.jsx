@@ -1,78 +1,131 @@
-import { faL } from '@fortawesome/free-solid-svg-icons';
 import React, { useState, useEffect } from 'react'
 import request from '../api/request';
+import { useStudent } from '../context/StudentProvider';
 
 const Student_Competetive_Exams = () => {
+    const { student } = useStudent();
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [isExamSelected, setIsExamSelected] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
-    const [inputValue, setInputValue] = useState(null);
-    const [score, setScore] = useState();
-    const [selectedExams, setSelectedExams] = useState([]);
+    const [inputValue, setInputValue] = useState('');
+    const [score, setScore] = useState('');
+    const [examFocused, setExamFocused] = useState(false);
     const [currSelectedExams, setCurrSelectedExams] = useState();
-    const [filteredExams, setFilteredExams] = useState([]);
+    const [primaryKey, setPrimaryKey] = useState('');
+    const [filteredExams, setFilteredExams] = useState([
+        "TOEFL",
+        "GMAT",
+        "GRE",
+        "SAT",
+        "IELTS",
+        "LSAT",
+        "MCAT",
+        "CAT",
+        "MAT",
+        "SNAP",
+        "GATE",
+        "NATIONAL ELIGIBILITY TEST(NET)",
+        "XAT",
+        "AICEE",
+        "CLAT",
+        "JEE Mains",
+        "JEE Advance",
+        "BITSAT",
+        "NEET"
+    ]);
     const [allSelectedExams, setAllSelectedExams] = useState([])
     const filterExams = (e) => {
-        const currLetter = e.target.value;
-        setInputValue(e.target.value);
-        const filter = competitiveExams.filter((exam) => exam.toLowerCase().startsWith(currLetter.toLowerCase()))
-        setFilteredExams(filter);
-    }
-    const examSelect = async() => {
-        console.log(currSelectedExams, score)
-        // console.log(allSelectedExams)
-        const newExam = {
-            exam: currSelectedExams,
-            score: score
+        try {
+            const currLetter = e.target.value;
+            setInputValue(currLetter);
+            const filter = competitiveExams.filter((exam) => exam.toLowerCase().startsWith(currLetter.toLowerCase()))
+            setFilteredExams(filter);
+        } catch (error) {
+            console.error("Error filtering exams:", error);
+            alert("Error searching exams. Please try again.");
         }
-        console.log(newExam)
-        // console.log(newExam)
-        setAllSelectedExams((prevExams) => {
-            const existingIndex = prevExams.findIndex((exam) => {
-                return (exam.exam === currSelectedExams)
-            })
-            console.log("existing index ", existingIndex)
-            if (existingIndex !== -1) {
-                const updatedExams = [...prevExams];
-                updatedExams[existingIndex].score = score;
-                return updatedExams;
-            } else {
-                return [...prevExams, newExam]
+    }
+    const examSelect = async () => {
+        try {
+            const newExam = {
+                exam_name: currSelectedExams,
+                score: score,
+                student
             }
-        })
-        const response = await request('post', "/", allSelectedExams);
-        console.log(response)
-        console.log(allSelectedExams)
-        setIsExamSelected(false);
-        setIsModalOpen(false);
 
-        setInputValue('');
+            if (!newExam.exam_name || !newExam.score) {
+                alert("Please select an exam and enter a score");
+                return;
+            }
+
+            if (isEdit) {
+                const res = await request('patch', `/competitive_exams/${primaryKey}/`, newExam);
+                const updatedExams = allSelectedExams.map(exam =>
+                    exam.id === primaryKey ? res : exam
+                );
+                setAllSelectedExams(updatedExams);
+            } else {
+                const res = await request('post', '/competitive_exams/', newExam)
+                setAllSelectedExams(prev => [...prev, res]);
+            }
+            closeModal();
+        } catch (error) {
+            console.error("Error saving exam:", error);
+            alert("Failed to save exam. Please try again.");
+        }
     };
     const addExams = (exam) => {
-        // console.log(language)
-        setCurrSelectedExams(exam);
-        setIsExamSelected(true)
-    }
-    useEffect(() => { }, [selectedExams, allSelectedExams]);
-
-    const checkOrRemove = () => {
-        console.log(isEdit)
-        if (isEdit) {
-            const updatedExams = allSelectedExams.filter((exams) => {
-                return exams.exam != currSelectedExams;
-            })
-            console.log(updatedExams);
-            setAllSelectedExams(updatedExams)
-            setIsExamSelected(false);
+        try {
+            setCurrSelectedExams(exam);
+            setIsExamSelected(true)
+            setInputValue('')
+        } catch (error) {
+            console.error("Error selecting exam:", error);
         }
     }
-    const editExam = (exam) => {
-        console.log(exam)
-        setIsModalOpen(true)
-        setCurrSelectedExams(exam.exam)
-        setIsEdit(true)
-        setIsExamSelected(true);
+    const checkOrRemove = () => {
+        setCurrSelectedExams('');
+        setIsExamSelected(false)
     }
+    const editExam = async (exam) => {
+        try {
+            setIsModalOpen(true)
+            setPrimaryKey(exam.id);
+            setScore(exam.score)
+            setCurrSelectedExams(exam.exam_name)
+            setIsEdit(true)
+            setIsExamSelected(true);
+        } catch (error) {
+            console.error("Error editing exam:", error);
+            alert("Error loading exam details. Please try again.");
+        }
+    }
+    const closeModal = () => {
+        try {
+            setIsModalOpen(false);
+            setScore('');
+            setCurrSelectedExams('');
+            setInputValue('');
+            setIsEdit(false);
+            setIsExamSelected(false);
+        } catch (error) {
+            console.error("Error closing modal:", error);
+        }
+    }
+    useEffect(() => {
+        const getStudentCompetetiveExams = async () => {
+            try {
+                const res = await request('get', '/competitive_exams/');
+                const matchedCompetetiveExams = res.filter(exams => exams.student === student);
+                // console.log("matchedCompetetiveExams: ", matchedCompetetiveExams)
+                setAllSelectedExams(matchedCompetetiveExams)
+            } catch (error) {
+                console.error("Error fetching exams:", error);
+                alert("Failed to load exams. Please try again.");
+            }
+        }
+        getStudentCompetetiveExams();
+    }, [student])
     const competitiveExams = [
         "TOEFL",
         "GMAT",
@@ -114,7 +167,7 @@ const Student_Competetive_Exams = () => {
                                     key={index}
                                 >
                                     <p className='flex gap-1 text-lg'>
-                                        {value.exam}
+                                        {value.exam_name}
                                         <i
                                             onClick={() => editExam(value)}
                                             className="ri-pencil-line text-gray-500"></i>
@@ -184,6 +237,7 @@ const Student_Competetive_Exams = () => {
                                         </div>
                                         <div className='comfort flex flex-wrap gap-2 mt-2'>
                                             <input
+                                                value={score}
                                                 onChange={(e) => { setScore(e.target.value) }}
                                                 className='border-2 w- rounded-2xl outline-gray-500 p-3 '
                                                 type="number" placeholder='Score' />
@@ -195,9 +249,13 @@ const Student_Competetive_Exams = () => {
                                             className='border-2 w-full p-3 outline-none'
                                             placeholder='Search Exams'
                                             value={inputValue}
+                                            onFocus={() => {
+                                                setExamFocused(true)
+                                            }}
+                                            onBlur={() => setTimeout(() => setExamFocused(false), 200)}
                                             onChange={(e) => filterExams(e)}
                                         />
-                                        {inputValue && (
+                                        {examFocused && (
                                             <ul className='h-22'>
                                                 {filteredExams.map((exam, index) => (
                                                     <li

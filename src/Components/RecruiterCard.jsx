@@ -7,7 +7,7 @@ const RecruiterCard = () => {
     const [dataPresent, setDataPresent] = useState();
     const [fullName, setFullName] = useState();
     const [gender, setGender] = useState();
-    const [date, setDate] = useState("");
+    const [date, setDate] = useState("");   
     const [location, setLocation] = useState('');
     const [hometown, setHometown] = useState('');
     const [email, setEmail] = useState('')

@@ -27,7 +27,7 @@ const Career_Skills = () => {
                 <Student_Profile_Summary />
                 <Student_Accomplishments />
                 <Student_Competetive_Exams />
-                <Student_Employement />
+                {/* <Student_Employement /> */}
                 <Student_Certifications />
                 <Student_resume />
                 {/* <Skills_Languages />

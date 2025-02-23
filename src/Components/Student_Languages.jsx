@@ -1,59 +1,17 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react';
 import request from '../api/request';
 import { useStudent } from '../context/StudentProvider';
+
 const Student_Languages = () => {
     const { student } = useStudent();
-    const [isModalOpen, setIsModalOpen] = useState(false)
-    const [islangSelected, setIsLangSelected] = useState(false);
-    const [inputValue, setInputValue] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [inputValue, setInputValue] = useState('');
     const [selectedLanguages, setSelectedLanguages] = useState([]);
     const [filteredLanguages, setFilteredLanguages] = useState([]);
-    const [primaryKey, setPrimaryKey] = useState('');
     const [langFocused, setLangFocused] = useState(false);
-    const filteredLanguage = (e) => {
-        const currLetter = e.target.value.toLowerCase();
-        // console.log(currLetter)
-        setInputValue(e.target.value);
-        const filter = languages.filter((language) => language.toLowerCase().startsWith(currLetter))
-        setFilteredLanguages(filter);
-    }
-    const addLanguages = async (language) => {
-        const langArray = selectedLanguages;
-        langArray.push(language)
-        // console.log('langArray: ', langArray)
-        const res = await request('patch', `/languages/${primaryKey}/`, {
-            languages: langArray,
-            student
-        })
-        // console.log("res from add languages", res)
-        setSelectedLanguages(res.languages)
-        setIsModalOpen(false)
-        // setIsLangSelected(true)
-    }
-    const removeLang = async (elem) => {
-        // console.log("primaryKey:", primaryKey);
-        const removedElementArray = selectedLanguages.filter((lang) => lang !== elem);
-        const res = await request('patch', `/languages/${primaryKey}/`, {
-            languages: removedElementArray,
-            student
-        })
-        // console.log("res from removeLang: ", res)
-        setSelectedLanguages(res.languages)
-        // console.log('removedElementArray', removedElementArray)
-    }
-    useEffect(() => {
-        const student_languages = async () => {
-            const res = await request('get', `/languages/`);
-            // console.log("res: ", res);
-            if (res.length>0) {
-                setSelectedLanguages(res[0].languages)
-                setPrimaryKey(res[0].id);
-                // console.log("primaryKey:", primaryKey);
-            }
-        }
-        student_languages()
-    }, []);
-
+    const [showAddLangPrompt, setShowAddLangPrompt] = useState(false);
+    const [studentFinalLanguages, setStudentFinalLanguages] = useState([]);
+    const [primaryKey, setPrimaryKey] = useState('');
     const languages = [
         "English", "Mandarin Chinese", "Hindi", "Spanish", "French",
         "Arabic", "Bengali", "Portuguese", "Russian", "Japanese",
@@ -77,52 +35,125 @@ const Student_Languages = () => {
         "Mossi", "Xhosa", "Belarusian", "Balochi", "Konkani"
     ];
 
+    useEffect(() => {
+        const fetchLanguages = async () => {
+            try {
+                const res = await request('get', '/language/');
+                const matchedStudentLanguages = res.find(lang => lang.student === student);
+                // console.log(matchedStudentLanguages)
+                if (matchedStudentLanguages) {
+                    setStudentFinalLanguages(matchedStudentLanguages.language);
+                    setSelectedLanguages(matchedStudentLanguages.language);
+                    setPrimaryKey(matchedStudentLanguages.id)
+                }
+                // console.log(primaryKey)
+            } catch (error) {
+                console.error('Error fetching languages:', error);
+            }
+        };
+        fetchLanguages();
+    }, [student]);
+
+    // Filter languages based on input
+    const handleInputChange = (e) => {
+        const currLetter = e.target.value.toLowerCase();
+        setInputValue(currLetter);
+
+        const filter = languages.filter((language) =>
+            language.toLowerCase().startsWith(currLetter)
+        );
+        setFilteredLanguages(filter);
+
+        // Show add language prompt if no matching languages are found
+        if (currLetter && filter.length === 0) {
+            setShowAddLangPrompt(true);
+        } else {
+            setShowAddLangPrompt(false);
+        }
+    };
+
+    const handleLanguageSelect = (language) => {
+        if (!selectedLanguages.includes(language)) {
+            setSelectedLanguages([...selectedLanguages, language]);
+        }
+        setInputValue('');
+        setFilteredLanguages(languages);
+        setLangFocused(false);
+    };
+
+    const removeLanguage = (language) => {
+        setSelectedLanguages(selectedLanguages.filter((lang) => lang !== language));
+    };
+
+    const addCustomLanguage = () => {
+        if (inputValue.trim() && !languages.includes(inputValue)) {
+            languages.push(inputValue);
+            setSelectedLanguages([...selectedLanguages, inputValue]);
+            setInputValue('');
+            setFilteredLanguages(languages);
+            setShowAddLangPrompt(false);
+        }
+    };
+
+    const saveLanguages = async () => {
+        try {
+            // console.log('selectedLanguages: ', selectedLanguages)
+            // console.log('primaryKey: ', primaryKey)
+            if (studentFinalLanguages == '') {
+                const res = await request('post', '/language/', {
+                    language: selectedLanguages,
+                    student
+                })
+                // console.log(res);
+                setStudentFinalLanguages(res.language)
+                setPrimaryKey(res.id);
+            } else {
+                // console.log("hdh")
+                const res = await request('patch', `/language/${primaryKey}/`, {
+                    language: selectedLanguages,
+                    student
+                })
+                // console.log("res from language update", res);
+                setStudentFinalLanguages(res.language)
+            }
+            setIsModalOpen(false);
+        } catch (error) {
+            console.error('Error saving languages:', error);
+        }
+    };
+
     return (
         <>
-            <div>
-                <div className="bg-white rounded-lg p-6 shadow-md w-[60vw] font-sans">
-                    <div className="flex justify-between items-center  ">
-                        <h2 className="text-lg font-semibold">Languages</h2>
-                        <button
-                            onClick={() => setIsModalOpen(true)}
-                            className="text-[#275DF5] text-md font-semibold">Add</button>
-                    </div>
-                    <div className='mt-2 flex gap-2 flex-col'>
-                        {selectedLanguages && (
-                            <div className='flex flex-col gap-2'>
-                                {selectedLanguages.map((elem, index) => (
-                                    <div
-                                        key={index}
-                                    >
-                                        <p className='flex gap-1 text-lg'>
-                                            {elem}
-                                            <i
-                                                onClick={() => removeLang(elem)}
-                                                className="ri-close-circle-line text- text-gray-500"></i>
-                                        </p>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-                    </div>
+            <div className="bg-white rounded-lg p-6 shadow-md w-[60vw] font-sans">
+                <div className="flex justify-between items-center">
+                    <h2 className="text-lg font-semibold">Languages</h2>
+                    <button
+                        onClick={() => setIsModalOpen(true)}
+                        className="text-[#275DF5] text-md font-semibold"
+                    >
+                        Add/Edit
+                    </button>
                 </div>
-
+                <div className="mt-2 flex gap-2 flex-wrap">
+                    {studentFinalLanguages.map((language, index) => (
+                        <div
+                            key={index}
+                            className="flex items-center px-4 py-2 border-2 border-gray-300 rounded-full"
+                        >
+                            {language}
+                        </div>
+                    ))}
+                </div>
             </div>
+
             {isModalOpen && (
-                <div
-                    className="fixed  inset-0 z-[80]  bg-black bg-opacity-50 flex items-center justify-center"
-                >
+                <div className="fixed inset-0 z-[80] bg-black bg-opacity-50 flex items-center justify-center">
                     <div className="bg-white border shadow-sm rounded-xl w-[60%] h-[50%] overflow-y-auto p-6">
-                        <div className='flex justify-end '>
+                        <div className="flex justify-end">
                             <button
                                 type="button"
                                 className="ml-auto inline-flex justify-center items-center gap-x-2 rounded-full focus:outline-none"
-                                onClick={() => {
-                                    setIsModalOpen(false)
-                                    setIsLangSelected(false)
-                                    // setCurrSelectedLanguages('');
-                                }
-                                }
+                                onClick={() => setIsModalOpen(false)}
                             >
                                 <span className="sr-only">Close</span>
                                 <svg
@@ -143,122 +174,98 @@ const Student_Languages = () => {
 
                         <div className="flex justify-between items-center py-3 px-4 border-b">
                             <div>
-                                <h1 className='text-2xl font-semibold'>Languages known</h1>
-                                <p className='text-sm text-[#717b9e]'>Strengthen your resume by letting recruiters know you can communicate in multiple languages</p>
+                                <h1 className="text-2xl font-semibold">Languages Known</h1>
+                                <p className="text-sm text-[#717b9e]">
+                                    Strengthen your resume by letting recruiters know you can communicate in multiple languages.
+                                </p>
                             </div>
-
                         </div>
 
-                        <div className='flex flex-col py-10'>
-                            <div className='flex flex-col p-2 mt-2 gap-5 w-[98%] '>
-                                <h1 className='text-lg font-medium'>Languages</h1>
-                                <div className=''>
-                                    <input type="text"
-                                        className='border-2 w-full p-3 outline-none'
+                        <div className="flex flex-col">
+                            <div className="flex flex-col p-2 mt-2 gap-5 w-[98%]">
+                                {selectedLanguages.length > 0 && (
+                                    <div className='flex flex-wrap gap-2 mb-2'>
+                                        {selectedLanguages.map((lang, index) => (
+
+                                            <span
+                                                key={index}
+                                                className='flex items-center px-4 py-2 border-2 border-gray-600 rounded-full bg-[#e7e7f1]'
+                                            >
+                                                {lang}
+                                                <button
+                                                    onClick={() => removeLanguage(lang)}
+                                                    className="ml-2 text-gray-500 hover:text-gray-700"
+                                                >
+                                                    ×
+                                                </button>
+                                            </span>
+                                        ))}
+                                    </div>
+                                )}
+                                <div className="relative w-full">
+                                    <input
+                                        type="text"
+                                        className="border-2 w-full p-3 outline-none rounded-lg"
+                                        placeholder="Search Languages"
+                                        value={inputValue}
                                         onFocus={() => {
-                                            setLangFocused(true)
-                                            setFilteredLanguages(languages)
+                                            setLangFocused(true);
+                                            setFilteredLanguages(languages);
                                         }}
                                         onBlur={() => setTimeout(() => setLangFocused(false), 150)}
-                                        placeholder='Search Languages'
-                                        value={inputValue}
-                                        onChange={(e) => filteredLanguage(e)}
+                                        onChange={handleInputChange}
                                     />
                                     {langFocused && (
-                                        <ul className='h-22'>
-                                            {filteredLanguages.map((language, index) => (
-                                                <li
-                                                    onClick={() => addLanguages(language)}
-                                                    key={index}
-                                                    className='text-xl flex gap-1 m-2 hover:bg-slate-100 mt-1'>
-                                                    {language}
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    )}
-                                </div>
-                                {/* {islangSelected ? (
-                                    <div>
-                                        <div className='flex flex-wrap gap-2'>
-                                            <p
-                                                className='flex items-center justify-center gap-2 px-4 py-2 border-2 border-gray-600 rounded-full  text-black  focus:outline-none bg-[#e7e7f1] '>
-                                                {currSelectedLanguages}
-                                                <i
-                                                    onClick={checkOrRemove}
-                                                    className="ri-close-large-line cursor-pointer"></i>
-                                            </p>
-                                        </div>
-                                        <h1 className='text-lg font-medium mt-2 mb-1'>Comfortable In</h1>
-                                        <div className='comfort flex flex-wrap gap-2 '>
-                                            {comfortLevel && (
-                                                comfortLevel.map((level, index) => (
-                                                    <p
-                                                        key={index}
-                                                        onClick={() => setIsComfortSelected(level)}
-                                                        className={
-                                                            isComfortSelected === level
-                                                                ? "flex items-center justify-center gap-2 px-4 py-2 border-2 border-gray-600 rounded-full text-black focus:outline-none bg-[#e7e7f1]"
-                                                                : "flex items-center justify-center gap-2 px-4 py-2 border-2 border-gray-300 rounded-full text-gray-600 focus:outline-none cursor-pointer"
-                                                        }
-                                                    >
-                                                        {level}
-                                                    </p>
-                                                ))
-                                            )}
-
-                                        </div>
-                                    </div>
-                                ) : (
-                                    <div className=''>
-                                        <input type="text"
-                                            className='border-2 w-full p-3 outline-none'
-                                            onFocus={() => {
-                                                setLangFocused(true)
-                                                setFilteredLanguages(languages)
-                                            }}
-                                            onBlur={() => setTimeout(() => setLangFocused(false), 150)}
-                                            placeholder='Search Languages'
-                                            value={inputValue}
-                                            onChange={(e) => filteredLanguage(e)}
-                                        />
-                                        {langFocused && (
-                                            <ul className='h-22'>
+                                        <div className="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-lg shadow-lg">
+                                            <ul className="max-h-32 overflow-y-auto">
                                                 {filteredLanguages.map((language, index) => (
                                                     <li
-                                                        onClick={() => addLanguages(language)}
                                                         key={index}
-                                                        className='text-xl flex gap-1 m-2 hover:bg-slate-100 mt-1'>
+                                                        className="px-4 py-2 text-sm hover:bg-slate-100 cursor-pointer transition-colors"
+                                                        onClick={() => handleLanguageSelect(language)}
+                                                    >
                                                         {language}
                                                     </li>
                                                 ))}
                                             </ul>
-                                        )}
-                                    </div>
-                                )} */}
-
-
+                                            {showAddLangPrompt && (
+                                                <div className="px-4 py-2 text-sm bg-gray-100 cursor-pointer transition-colors">
+                                                    <span>Add </span>
+                                                    <span className="font-semibold">{inputValue}</span>
+                                                    <span> as a new language</span>
+                                                    <button
+                                                        onClick={addCustomLanguage}
+                                                        className="ml-2 text-blue-500 hover:text-blue-700"
+                                                    >
+                                                        Add
+                                                    </button>
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         </div>
-                        <div className='flex justify-end gap-2'>
+
+                        <div className="flex justify-end gap-2">
                             <button
                                 onClick={() => setIsModalOpen(false)}
-                                className='text-[#275df5] font-semibold'>Cancel</button>
-                            {islangSelected ? (
-                                <button
-                                    onClick={addLanguages}
-                                    className='bg-[#275df5] text-white px-3 py-2 rounded-xl'>Save Changes</button>
-                            ) : (
-                                <button
-                                    onClick={addLanguages}
-                                    className='bg-[#c5c8d1] text-white px-3 py-2 rounded-xl'>Save Changes</button>
-                            )}
+                                className="text-[#275df5] font-semibold"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={saveLanguages}
+                                className="bg-[#275df5] text-white px-3 py-2 rounded-xl"
+                            >
+                                Save Changes
+                            </button>
                         </div>
                     </div>
                 </div>
-            )
-            }
+            )}
         </>
-    )
-}
+    );
+};
 
-export default Student_Languages
+export default Student_Languages;

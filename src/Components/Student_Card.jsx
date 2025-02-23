@@ -5,7 +5,6 @@ import { useStudent } from '../context/StudentProvider';
 const Student_Card = () => {
     const { setStudent } = useStudent();
     const [isOpen, setIsOpen] = useState(false);
-    const [dataPresent, setDataPresent] = useState();
     const [fullName, setFullName] = useState();
     const [gender, setGender] = useState();
     const [date, setDate] = useState("");
@@ -13,6 +12,9 @@ const Student_Card = () => {
     const [hometown, setHometown] = useState('');
     const [email, setEmail] = useState('')
     const [number, setNumber] = useState('')
+    const [enrollment, setEnrollment] = useState('');
+    const [branch, setBranch] = useState('');
+    const [password, setPassword] = useState('');
     var [studentDetails, setStudentDetails] = useState({});
     const add_Student_Details = async () => {
         try {
@@ -30,37 +32,30 @@ const Student_Card = () => {
             // console.log("Response:", response);
 
             setStudentDetails(newStudent);
-            setDataPresent(true);
             setIsOpen(false);
         } catch (error) {
             console.error("Error adding student details:", error);
         }
     };
-    useEffect(() => {
-        // Check if studentDetails is empty by checking the length of its keys
-        if (Object.keys(studentDetails).length === 0) {
-            setDataPresent(false);
-        } else {
-            setDataPresent(true);
-        }
-    }, [studentDetails]);
-    const updateDetails = () => {
-        if (studentDetails == '') {
-            setIsOpen(true)
-        }
-        setIsOpen(true)
-        setEmail(studentDetails.email);
-        setNumber(studentDetails.number);
+    const editStudent = () => {
+        console.log("studentDetails:", studentDetails)
+        setEnrollment(studentDetails.enrollment_no);
+        setBranch(studentDetails.branch)
+        setFullName(studentDetails.first_name + " " + studentDetails.last_name)
+        setEmail(studentDetails.email)
         setGender(studentDetails.gender);
-        setFullName(studentDetails.fullName);
-        setDate(studentDetails.date)
-        setLocation(studentDetails.location)
-        setHometown(studentDetails.hometown)
+        setHometown(studentDetails.hometown);
+        setDate(studentDetails.dob)
+        setLocation(studentDetails.current_location);
+        setHometown(studentDetails.permanent_address.city)
+        setNumber(studentDetails.mobile_number)
+        setIsOpen(true)
     }
     useEffect(() => {
         const student_information = async () => {
             try {
                 const res = await request("get", "/student/");
+                console.log("res from student card get: ", res);
                 if (res.length > 0) {
                     setStudentDetails(res[0]); // Store full student data
                     setStudent(res[0].enrollment_no); // Store enrollment number in Context
@@ -96,11 +91,8 @@ const Student_Card = () => {
 
                     {/* Action Buttons */}
                     <div className="flex gap-2">
-                        <button className="px-3 py-1 border rounded text-gray-700 text-sm">User object</button>
                         <button
-                            onClick={() => {
-                                setIsOpen(true)
-                            }}
+                            onClick={editStudent}
                             className="px-3 py-1 border rounded text-gray-700 text-sm flex items-center gap-1">
                             {/* <Edit className="w-4 h-4" />  */}
                             Edit profile
@@ -147,73 +139,6 @@ const Student_Card = () => {
                     </div>
                 </div>
             </div>
-            {/* <div className='px-32 py-10'>
-                <div className='w-full flex bg-[#ffffff] shadow-lg px-5 rounded-lg py-16'>
-                    <div className='flex items-center gap-10'>
-                        <div className='flex gap-16 items-center'>
-                            <img className='w-32 h-32 rounded-full ' src="https://images.unsplash.com/photo-1479936343636-73cdc5aae0c3?q=80&w=1780&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" />
-                            {dataPresent ? (
-                                <div className='flex flex-col text-left'>
-                                    <div className='flex items-center gap-2 text-white mb-10'>
-                                        <h1 className='text-black text-3xl'>
-                                            {studentDetails.enrollment_no}</h1>
-                                        <i
-                                            onClick={updateDetails}
-                                            className="ri-pencil-line text-[#717B9E] mt-1 text-2xl "></i>
-                                    </div>
-                                    <div className='flex gap-5'>
-                                        <div className='flex flex-col gap-4'>
-                                            <div className='flex gap-3 items-center'>
-                                                <i className="ri-map-pin-line text-[#717B9E]"></i>
-                                                <p className='text-[#275DF5] text-lg font-medium'> {studentDetails.current_location}</p>
-                                            </div>
-                                            <div className='flex gap-3 items-center'>
-                                                <i className="ri-men-line text-[#717B9E]"></i>
-                                                <p className='text-[#275DF5] text-lg font-medium'> {studentDetails.gender}</p>
-                                            </div>
-                                            <div className='flex gap-3 items-center'>
-                                                <i className="ri-cake-2-line text-[#717B9E]"></i>
-                                                <p className='text-[#275DF5] text-lg font-medium'> {studentDetails.dob}</p>
-                                            </div>
-                                        </div>
-                                        <div className='flex flex-col gap-4'>
-                                            <div className='flex items-center gap-2'>
-                                                <div className='flex gap-3 items-center'>
-                                                    <i className="ri-phone-line text-[#717B9E]"></i>
-                                                    <p className='text-[#717B9E] text-lg font-medium'>{studentDetails.mobile_number}</p>
-                                                </div>
-                                                <a href="" className='text-[#275DF5] font-bold'>Verify</a>
-                                            </div>
-                                            <div className='flex items-center'>
-                                                <div className='flex gap-3'>
-                                                    <i className="ri-mail-line text-[#717B9E]"></i>
-                                                    <p className='text-[#717B9E] text-lg font-medium'>{studentDetails.email}</p>
-                                                </div>
-                                                <p><i className="ri-verified-badge-fill p-2 text-green-400"></i></p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            ) : (
-                                <div className='flex gap-1 items-center cursor-pointer'>
-                                    <i
-                                        onClick={updateDetails}
-                                        className="ri-pencil-line text-[#717B9E] mt-1 text-2xl "></i>
-                                    <h1
-                                        onClick={updateDetails}
-                                        className="text-blue-700 font-bold"
-                                    >Add Details</h1>
-                                </div>
-
-                            )
-                            }
-                        </div>
-                    </div>
-                    <div>
-
-                    </div>
-                </div>
-            </div> */}
             {isOpen && (
                 <div className="fixed inset-0 z-[80] bg-black bg-opacity-50 flex items-center justify-center">
                     <div className="bg-white border shadow-sm rounded-xl w-[70%] h-[70%] overflow-y-auto p-6">
@@ -236,7 +161,45 @@ const Student_Card = () => {
                                 <h1 className='text-2xl font-semibold'>All about you</h1>
                             </div>
                         </div>
-
+                        {/* Enrollment Number */}
+                        <div className='flex flex-col py-2'>
+                            <h1 className='font-medium'>Enrollment Number </h1>
+                            <div className='flex gap-3 m-2'>
+                                <input
+                                    type="text"
+                                    className='border-2 border-gray-400 w-full p-3 outline-slate-600 rounded-3xl'
+                                    placeholder='Your Name'
+                                    value={enrollment}
+                                    onChange={(e) => setEnrollment(e.target.value)}
+                                />
+                            </div>
+                        </div>
+                        {/* Branch*/}
+                        <div className='flex flex-col py-2'>
+                            <h1 className='font-medium'>Branch</h1>
+                            <div className='flex gap-3 m-2'>
+                                <input
+                                    type="text"
+                                    className='border-2 border-gray-400 w-full p-3 outline-slate-600 rounded-3xl'
+                                    placeholder='Your Name'
+                                    value={branch}
+                                    onChange={(e) => setBranch(e.target.value)}
+                                />
+                            </div>
+                        </div>
+                        {/* Password*/}
+                        <div className='flex flex-col py-2'>
+                            <h1 className='font-medium'>Password</h1>
+                            <div className='flex gap-3 m-2'>
+                                <input
+                                    type="text"
+                                    className='border-2 border-gray-400 w-full p-3 outline-slate-600 rounded-3xl'
+                                    placeholder='Your Name'
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                />
+                            </div>
+                        </div>
                         {/* Full name */}
                         <div className='flex flex-col py-2'>
                             <h1 className='font-medium'>Full name</h1>
@@ -284,7 +247,6 @@ const Student_Card = () => {
                                 />
                             </div>
                         </div>
-
                         {/* Current Location */}
                         <div className='flex flex-col py-2'>
                             <h1 className='font-medium'>Current Location</h1>
