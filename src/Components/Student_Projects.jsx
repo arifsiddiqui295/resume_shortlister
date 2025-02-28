@@ -42,8 +42,8 @@ const Student_Projects = () => {
             description: projectDescription,
             skills_used: skills,
             student,
-            gitHubLink: gitHubLink,
-            liveLink: liveLink
+            github_link: gitHubLink,
+            hosted_link: liveLink
         }
         // console.log("newProject: ", newProject)
         // console.log("primaryKey: ", primaryKey)
@@ -73,8 +73,8 @@ const Student_Projects = () => {
         setProjectName(project.project_name);
         setProjectDescription(project.description);
         setSkills(project.skills_used);
-        setGitHubLInk(project.gitHubLink);
-        setLiveLink(project.liveLink);
+        setGitHubLInk(project.github_link);
+        setLiveLink(project.hosted_link);
         setIsModalOpen(true);
         setIsEdit(true);
     }
@@ -90,7 +90,7 @@ const Student_Projects = () => {
     }, [])
     return (
         <>
-            <div>
+            <div id='student-projects'>
                 <div className="bg-white rounded-lg p-6 shadow-md w-[60vw]">
                     <div className="flex justify-between items-center">
                         <h2 className="text-lg font-semibold">Personal Projects</h2>
@@ -125,13 +125,13 @@ const Student_Projects = () => {
                                             ))}
                                         </div>
                                         <div className='flex gap-3 items-center'>
-                                            {project.gitHubLink && (
-                                                <a href={project.gitHubLink} target="_blank" rel="noopener noreferrer" className="text-sm text-blue-500 underline mt-2 block">
+                                            {project.github_link && (
+                                                <a href={project.github_link} target="_blank" rel="noopener noreferrer" className="text-sm text-blue-500 underline mt-2 block">
                                                     GitHub Link
                                                 </a>
                                             )}
-                                            {project.liveLink && (
-                                                <a href={project.liveLink} target="_blank" rel="noopener noreferrer" className="text-blue-500 text-sm underline mt-2 block">
+                                            {project.hosted_link && (
+                                                <a href={project.hosted_link} target="_blank" rel="noopener noreferrer" className="text-blue-500 text-sm underline mt-2 block">
                                                     Live Project Link
                                                 </a>
                                             )}

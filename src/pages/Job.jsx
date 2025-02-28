@@ -1,165 +1,96 @@
-import React from 'react'
-import Button from '../Components/Button'
-import Navbar from '../Components/Navbar'
+import React, { useState } from "react";
+import SmallSc from "../Components/SmallSc";
+import Completedis from "../Components/Completedis";
+import Smalldis from "../Components/Smalldiss";
+import Navbar from "../Components/Navbar";
 
-const Job = () => {
+export default function Job(props) {
+    const [jobs, setJobs] = useState([
+        {
+            company_name: "ABC Tech",
+            role: "Frontend Developer",
+            location: "Indore",
+            salary: 45000,
+            dateOfPublish: "28/01/2025",
+            discrip:
+                "Looking for an experienced Frontend Developer with expertise in React.js and CSS.Looking for an experienced Frontend Developer with expertise in React.js and CSS.",
+        },
+        {
+            company_name: "PQR Solutions",
+            role: "Backend Developer",
+            location: "Bhopal",
+            salary: 55000,
+            dateOfPublish: "27/01/2025",
+            discrip:
+                "Hiring a Backend Developer skilled in Node.js, Express, and PostgreSQL.Looking for an experienced Frontend Developer with expertise in React.js and CSS.",
+        },
+        {
+            company_name: "LMN Digital",
+            role: "Full Stack Developer",
+            location: "Mumbai",
+            salary: 60000,
+            dateOfPublish: "30/01/2025",
+            discrip: "We need a Full Stack Developer with knowledge of MERN stack.Looking for an experienced Frontend Developer with expertise in React.js and CSS.",
+        },
+        {
+            company_name: "XYZ Software",
+            role: "Web Developer",
+            location: "Bangalore",
+            salary: 50000,
+            dateOfPublish: "29/01/2025",
+            discrip:
+                "Seeking a Web Developer experienced in JavaScript, HTML, and CSS.Looking for an experienced Frontend Developer with expertise in React.js and CSS.",
+        },
+        {
+            company_name: "TechNova",
+            role: "UI/UX Designer",
+            location: "Hyderabad",
+            salary: 47000,
+            dateOfPublish: "26/01/2025",
+            discrip: "Hiring a UI/UX Designer proficient in Figma and Adobe XD.Looking for an experienced Frontend Developer with expertise in React.js and CSS.",
+        },
+        {
+            company_name: "Innovate IT",
+            role: "Software Engineer",
+            location: "Delhi",
+            salary: 65000,
+            dateOfPublish: "25/01/2025",
+            discrip:
+                "Looking for a Software Engineer with experience in Python and Django.Looking for an experienced Frontend Developer with expertise in React.js and CSS.",
+        },
+    ]);
+
+    const [currentjobidx, setCurrentJobidx] = useState(0);
+    const [loading, setLoading] = useState(false);
+
+    const handleCurrent = (idx) => {
+        setLoading(true); // Show loading when the job index is changing
+        setTimeout(() => {
+            setCurrentJobidx(idx);
+            setLoading(false); // Hide loading after a short delay
+        }, 100); // Simulated delay
+    };
+
     return (
         <>
             <Navbar />
-            <div className='flex flex-col gap-3 p-2 px-5 overflow-hidden'>
-                <div>
-                    <div className='flex justify-between bg-[#CEDEFF] p-4 rounded-lg items-center hover:border-white hover:bg-[#6d96e8] hover:text-white transition-all ease-in-out duration-300 hover:scale-105
-        '>
-                        <div className='flex gap-5'>
-                            <img
-                                className='h-20 rounded-lg'
-                                src="https://images.unsplash.com/photo-1714464703034-f74ec8163fc2?q=80&w=1780&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" />
-                            <div className='flex flex-col'>
-                                <h1 className='text-lg font-bold'>Senior Recruiter, Nursing | Hybrid NY</h1>
-                                <p className='text-md font-medium'><a className='underline' href="">At Healthfirst</a> - Remote</p>
-                                <p>Posted on 17 sep</p>
-                            </div>
-                        </div>
-                        <div className='flex gap-5'>
-                            < Button
-                                text="Apply on Company Site"
-                                className="w-36 text-lg h-16 text-[#53565F] text-md bg-[#EBF8FD] rounded-xl"
-                            />
-                            <Button
-                                text="View Job"
-                                className="w-36 h-16 text-lg border border-[#2B308B] rounded-xl"
-                            />
-                        </div>
+            <div className="max-h-screen hidden bg-white ite gap-7 text-black md:flex flex-wrap pl-14 pr-14 w-full pt-3">
+                {/* Left section */}
+                <Smalldis jobs={jobs} handleCurrent={handleCurrent} />
+
+                {/* Right Section with Loading */}
+                {loading ? (
+                    <div className="w-full flex justify-center items-center">
+
                     </div>
-                </div>
-                <div>
-                    <div className='flex justify-between bg-[#CEDEFF] p-4 rounded-lg items-center hover:border-white hover:bg-[#6d96e8] hover:text-white transition-all ease-in-out duration-300 hover:scale-105
-        '>
-                        <div className='flex gap-5'>
-                            <img
-                                className='h-20 rounded-lg'
-                                src="https://images.unsplash.com/photo-1714464703034-f74ec8163fc2?q=80&w=1780&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" />
-                            <div className='flex flex-col'>
-                                <h1 className='text-lg font-bold'>Senior Recruiter, Nursing | Hybrid NY</h1>
-                                <p className='text-md font-medium'><a className='underline' href="">At Healthfirst</a> - Remote</p>
-                                <p>Posted on 17 sep</p>
-                            </div>
-                        </div>
-                        <div className='flex gap-5'>
-                            < Button
-                                text="Apply on Company Site"
-                                className="w-36 text-lg h-16 text-[#53565F] text-md bg-[#EBF8FD] rounded-xl"
-                            />
-                            <Button
-                                text="View Job"
-                                className="w-36 h-16 text-lg border border-[#2B308B] rounded-xl"
-                            />
-                        </div>
-                    </div>
-                </div>
-                <div>
-                    <div className='flex justify-between bg-[#CEDEFF] p-4 rounded-lg items-center hover:border-white hover:bg-[#6d96e8] hover:text-white transition-all ease-in-out duration-300 hover:scale-105
-        '>
-                        <div className='flex gap-5'>
-                            <img
-                                className='h-20 rounded-lg'
-                                src="https://images.unsplash.com/photo-1714464703034-f74ec8163fc2?q=80&w=1780&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" />
-                            <div className='flex flex-col'>
-                                <h1 className='text-lg font-bold'>Senior Recruiter, Nursing | Hybrid NY</h1>
-                                <p className='text-md font-medium'><a className='underline' href="">At Healthfirst</a> - Remote</p>
-                                <p>Posted on 17 sep</p>
-                            </div>
-                        </div>
-                        <div className='flex gap-5'>
-                            < Button
-                                text="Apply on Company Site"
-                                className="w-36 text-lg h-16 text-[#53565F] text-md bg-[#EBF8FD] rounded-xl"
-                            />
-                            <Button
-                                text="View Job"
-                                className="w-36 h-16 text-lg border border-[#2B308B] rounded-xl"
-                            />
-                        </div>
-                    </div>
-                </div>
-                <div>
-                    <div className='flex justify-between bg-[#CEDEFF] p-4 rounded-lg items-center hover:border-white hover:bg-[#6d96e8] hover:text-white transition-all ease-in-out duration-300 hover:scale-105
-        '>
-                        <div className='flex gap-5'>
-                            <img
-                                className='h-20 rounded-lg'
-                                src="https://images.unsplash.com/photo-1714464703034-f74ec8163fc2?q=80&w=1780&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" />
-                            <div className='flex flex-col'>
-                                <h1 className='text-lg font-bold'>Senior Recruiter, Nursing | Hybrid NY</h1>
-                                <p className='text-md font-medium'><a className='underline' href="">At Healthfirst</a> - Remote</p>
-                                <p>Posted on 17 sep</p>
-                            </div>
-                        </div>
-                        <div className='flex gap-5'>
-                            < Button
-                                text="Apply on Company Site"
-                                className="w-36 text-lg h-16 text-[#53565F] text-md bg-[#EBF8FD] rounded-xl"
-                            />
-                            <Button
-                                text="View Job"
-                                className="w-36 h-16 text-lg border border-[#2B308B] rounded-xl"
-                            />
-                        </div>
-                    </div>
-                </div>
-                <div>
-                    <div className='flex justify-between bg-[#CEDEFF] p-4 rounded-lg items-center hover:border-white hover:bg-[#6d96e8] hover:text-white transition-all ease-in-out duration-300 hover:scale-105
-        '>
-                        <div className='flex gap-5'>
-                            <img
-                                className='h-20 rounded-lg'
-                                src="https://images.unsplash.com/photo-1714464703034-f74ec8163fc2?q=80&w=1780&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" />
-                            <div className='flex flex-col'>
-                                <h1 className='text-lg font-bold'>Senior Recruiter, Nursing | Hybrid NY</h1>
-                                <p className='text-md font-medium'><a className='underline' href="">At Healthfirst</a> - Remote</p>
-                                <p>Posted on 17 sep</p>
-                            </div>
-                        </div>
-                        <div className='flex gap-5'>
-                            < Button
-                                text="Apply on Company Site"
-                                className="w-36 text-lg h-16 text-[#53565F] text-md bg-[#EBF8FD] rounded-xl"
-                            />
-                            <Button
-                                text="View Job"
-                                className="w-36 h-16 text-lg border border-[#2B308B] rounded-xl"
-                            />
-                        </div>
-                    </div>
-                </div>
-                <div>
-                    <div className='flex justify-between bg-[#CEDEFF] p-4 rounded-lg items-center hover:border-white hover:bg-[#6d96e8] hover:text-white transition-all ease-in-out duration-300 hover:scale-105
-        '>
-                        <div className='flex gap-5'>
-                            <img
-                                className='h-20 rounded-lg'
-                                src="https://images.unsplash.com/photo-1714464703034-f74ec8163fc2?q=80&w=1780&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" />
-                            <div className='flex flex-col'>
-                                <h1 className='text-lg font-bold'>Senior Recruiter, Nursing | Hybrid NY</h1>
-                                <p className='text-md font-medium'><a className='underline' href="">At Healthfirst</a> - Remote</p>
-                                <p>Posted on 17 sep</p>
-                            </div>
-                        </div>
-                        <div className='flex gap-5'>
-                            < Button
-                                text="Apply on Company Site"
-                                className="w-36 text-lg h-16 text-[#53565F] text-md bg-[#EBF8FD] rounded-xl"
-                            />
-                            <Button
-                                text="View Job"
-                                className="w-36 h-16 text-lg border border-[#2B308B] rounded-xl"
-                            />
-                        </div>
-                    </div>
-                </div>
+                ) : (
+                    <Completedis job={jobs[currentjobidx]} />
+                )}
+            </div>
+
+            <div className="max-h-screen md:hidden w-full flex gap-7 flex-col">
+                <SmallSc jobs={jobs} />
             </div>
         </>
-    )
+    );
 }
-
-export default Job

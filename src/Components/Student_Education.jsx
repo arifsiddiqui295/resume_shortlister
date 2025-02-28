@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import request from '../api/request';
 import { useStudent } from '../context/StudentProvider';
-
 const Student_Education = () => {
     const { student } = useStudent();
     const [isOpen, setIsOpen] = useState(false);
@@ -116,7 +115,7 @@ const Student_Education = () => {
     };
     return (
         <>
-            <div className="bg-white  rounded-lg p-6 shadow-md w-[60vw]">
+            <div id="student-education" className="bg-white  rounded-lg p-6 shadow-md w-[60vw]">
                 <div className="flex justify-between items-center">
                     <h2 className="text-lg font-semibold">Education</h2>
 
@@ -146,15 +145,8 @@ const Student_Education = () => {
                                         <div className='flex'>
                                             <p className=''>
                                                 {education.board_university},
-                                                {
-                                                    isCollegeLevel ? (
-                                                        education.branch
-                                                    ) : (
-                                                        education.medium
-                                                    )
-                                                }
-
-                                            </p>
+                                                {education.branch},
+                                                {education.medium}</p>
                                         </div>
                                     </div>
                                     <div className='flex'>

@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import Button from "./Button";
 import { useNavigate } from "react-router-dom";
+import { useStudent } from "../context/StudentProvider";
+import { useEffect } from "react";
 const Navbar = () => {
+  const { student, setStudent } = useStudent();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const goToProfile = () => {
@@ -10,7 +13,17 @@ const Navbar = () => {
       navigate("/profile");
     }, 2000);
   };
+  const logoutHandler = () => {
+    console.log(student)
+    localStorage.removeItem("access");
+    localStorage.removeItem("refresh");
+    localStorage.removeItem('studentEnrollment')
+    window.location.href = "/student-login"; // Redirect to login page
 
+  }
+  useEffect(() => {
+
+  }, [student])
   return (
     <div
       className="flex justify-between w-full md:py-4 items-center md:px-8 py-2 px-2"
@@ -38,13 +51,27 @@ const Navbar = () => {
             className="w-40 h-10 border border-[#AAB1CE] rounded-xl"
           />
         </a>
+        {
+          student ? (
+            <div onClick={logoutHandler}>
+              <Button
+                text="Logout"
+                className="w-40 h-10 text-white bg-[#2B308B] rounded-xl"
+              />
+            </div>
+          ) : (
+            <a href="/student-login">
+              <Button
+                text="Login"
+                className="w-40 h-10 text-white bg-[#2B308B] rounded-xl"
+              />
+            </a>
+          )
+        }
 
-        <Button
-          text="Login"
-          className="w-40 h-10 text-white bg-[#2B308B] rounded-xl"
-        />
+
       </div>
-    </div>
+    </div >
   );
 };
 

@@ -3,6 +3,7 @@ import { useState } from "react";
 import request from "../api/request";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constants";
 import { useNavigate } from "react-router-dom";
+import Navbar from "../Components/Navbar";
 const StudentLogin = () => {
     const navigate = useNavigate();
     const [enrollment, setEnrollment] = useState('');
@@ -15,7 +16,7 @@ const StudentLogin = () => {
         setLoading(true)
         try {
             const res = await request('post', '/login/', { username: enrollment, password: password })
-            console.log(res)
+            console.log("res from login: ",res)
             if (res) {
                 localStorage.setItem(ACCESS_TOKEN, res.access);
                 localStorage.setItem(REFRESH_TOKEN, res.refresh);
@@ -31,6 +32,7 @@ const StudentLogin = () => {
     }
     return (
         <>
+        <Navbar />
             <div className="bg-gray-50 font-[sans-serif]">
                 <div className="min-h-screen flex flex-col items-center justify-center py-6 px-4">
                     <div className="max-w-md w-full">

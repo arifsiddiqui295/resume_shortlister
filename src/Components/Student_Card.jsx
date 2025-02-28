@@ -5,8 +5,8 @@ import { useStudent } from '../context/StudentProvider';
 const Student_Card = () => {
     const { setStudent } = useStudent();
     const [isOpen, setIsOpen] = useState(false);
-    const [fullName, setFullName] = useState();
-    const [gender, setGender] = useState();
+    const [fullName, setFullName] = useState('');
+    const [gender, setGender] = useState('');
     const [date, setDate] = useState("");
     const [location, setLocation] = useState('');
     const [hometown, setHometown] = useState('');
@@ -15,47 +15,66 @@ const Student_Card = () => {
     const [enrollment, setEnrollment] = useState('');
     const [branch, setBranch] = useState('');
     const [password, setPassword] = useState('');
+    const [isEdit, setIsEdit] = useState('');
     var [studentDetails, setStudentDetails] = useState({});
+    const { student } = useStudent();
     const add_Student_Details = async () => {
         try {
+            const name_parts = fullName.split(" ");
+            const first_name = name_parts[0];
+            const last_name = name_parts[1];
+            // console.log("first_name,last_name", first_name, last_name)
             const newStudent = {
                 email: email,
-                fullName: fullName,
+                first_name: first_name,
+                last_name: last_name,
                 gender: gender,
-                date: date,
-                location: location,
+                dob: date,
+                current_location: location,
                 hometown: hometown,
-                number: number
+                mobile_number: number,
+                branch: branch,
+                enrollment_no: enrollment,
+                permanent_address: hometown
             };
-
+            console.log("new Student from student card: ", newStudent)
+            // console.log("student: ",student)
+            if (isEdit) {
+                const response = await request('patch', `/student/${student}/`, newStudent);
+                console.log("Response:", response);
+                setStudentDetails(response)
+                setIsEdit(false);
+                setIsOpen(false);
+            }
             // const response = await request('post', "/", newStudent);
             // console.log("Response:", response);
 
-            setStudentDetails(newStudent);
-            setIsOpen(false);
+            // setStudentDetails(newStudent);
+            // setIsOpen(false);
         } catch (error) {
             console.error("Error adding student details:", error);
         }
     };
     const editStudent = () => {
-        console.log("studentDetails:", studentDetails)
-        setEnrollment(studentDetails.enrollment_no);
-        setBranch(studentDetails.branch)
-        setFullName(studentDetails.first_name + " " + studentDetails.last_name)
-        setEmail(studentDetails.email)
-        setGender(studentDetails.gender);
-        setHometown(studentDetails.hometown);
-        setDate(studentDetails.dob)
-        setLocation(studentDetails.current_location);
-        setHometown(studentDetails.permanent_address.city)
-        setNumber(studentDetails.mobile_number)
+        // console.log("studentDetails:", studentDetails)
+        setEnrollment(studentDetails?.enrollment_no);
+        setBranch(studentDetails?.branch)
+        setFullName(studentDetails?.first_name + " " + studentDetails?.last_name)
+        setEmail(studentDetails?.email)
+        setGender(studentDetails?.gender);
+        setHometown(studentDetails?.hometown);
+        setDate(studentDetails?.dob)
+        setLocation(studentDetails?.current_location);
+        setHometown(studentDetails?.permanent_address)
+        setNumber(studentDetails?.mobile_number)
         setIsOpen(true)
+        setIsEdit(true);
     }
     useEffect(() => {
         const student_information = async () => {
             try {
                 const res = await request("get", "/student/");
-                console.log("res from student card get: ", res);
+                // console.log("res from student card get: ", res);
                 if (res.length > 0) {
                     setStudentDetails(res[0]); // Store full student data
                     setStudent(res[0].enrollment_no); // Store enrollment number in Context

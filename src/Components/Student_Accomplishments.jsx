@@ -71,7 +71,7 @@ const Student_Accomplishments = () => {
     return (
         <>
             <ToastContainer position="top-right" autoClose={3000} hideProgressBar={true} />
-            <div className="bg-white rounded-lg p-6 shadow-md w-[60vw]">
+            <div id='student-accomplishments' className="bg-white rounded-lg p-6 shadow-md w-[60vw]">
                 <div className="flex justify-between items-center">
                     <h2 className="text-lg font-semibold">Accomplishments</h2>
                     <button

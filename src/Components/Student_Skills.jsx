@@ -49,7 +49,7 @@ const Student_Skills = () => {
 
     return (
         <>
-            <div className="bg-white rounded-lg p-6 shadow-md w-[60vw]">
+            <div id='student-skills' className="bg-white rounded-lg p-6 shadow-md w-[60vw]">
                 <div className="flex justify-between items-center">
                     <h2 className="text-lg font-semibold">Key Skills</h2>
                     <button
@@ -77,7 +77,7 @@ const Student_Skills = () => {
                         <div className='flex justify-end'>
                             <button
                                 className="p-2 hover:bg-gray-100 rounded-full"
-                                // onClick={() => setIsModalOpen(false)}
+                            // onClick={() => setIsModalOpen(false)}
                             >
                                 ✕
                             </button>

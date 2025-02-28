@@ -40,7 +40,7 @@ const Student_Profile_Summary = () => {
         const getProfileSummaryFromServer = async () => {
             const res = await request('get', '/summary/');
             // console.log("res from profile summary: ", res)
-            if(res.length>0){
+            if (res.length > 0) {
                 setProfileSummary(res[0].summary)
                 setInputValue(res[0].summary)
                 // console.log("primary id",res[0].id);
@@ -52,7 +52,7 @@ const Student_Profile_Summary = () => {
     return (
         <>
             <ToastContainer position="top-right" autoClose={3000} hideProgressBar={true} />
-            <div>
+            <div id='student-profile-summary'>
                 <div className="bg-white rounded-lg p-6 shadow-md w-[60vw]">
                     <div className="flex justify-between items-center  ">
                         <h2 className="text-lg font-semibold">Profile Summary </h2>

@@ -150,7 +150,7 @@ const Student_Competetive_Exams = () => {
 
     return (
         <>
-            <div>
+            <div id='student-competitive-exams'>
                 <div className="bg-white rounded-lg p-6 shadow-md w-[60vw] font-sans">
                     <div className="flex justify-between items-center  ">
                         <div className='flex flex-col'>
