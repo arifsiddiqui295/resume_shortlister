@@ -124,7 +124,7 @@ const Student_Languages = () => {
 
     return (
         <>
-            <div id='student-languages' className="bg-white rounded-lg p-6 shadow-md w-[60vw] font-sans">
+            <div className="bg-white rounded-lg p-6 shadow-md w-full  md:w-[60vw] font-sans">
                 <div className="flex justify-between items-center">
                     <h2 className="text-lg font-semibold">Languages</h2>
                     <button

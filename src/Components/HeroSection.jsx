@@ -1,6 +1,3 @@
-import { FaFacebook, FaInstagram, FaLinkedin } from "react-icons/fa";
-import { IoSearch } from "react-icons/io5";
-
 export default function HeroSection() {
   return (
     // Hero Section

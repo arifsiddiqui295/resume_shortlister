@@ -22,7 +22,7 @@ const Student_resume = () => {
     };
 
     return (
-        <div id="student-resume" className="bg-white rounded-lg p-6 shadow-md w-[60vw]">
+        <div className="bg-white rounded-lg p-6 flex flex-col shadow-md w-full  md:w-[60vw]">
             <h2 className="text-lg font-semibold mb-2">Resume</h2>
             <p className="text-sm text-gray-600 mb-4">
                 Your resume is the first impression you make on potential employers. Craft it carefully to secure your desired job or internship.
@@ -51,7 +51,7 @@ const Student_resume = () => {
             </div>
             <button
                 onClick={handleFileUpload}
-                className="mt-4 bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
+                className="mt-4 bg-green-500 self-center text-white px-4 py-2 rounded-md hover:bg-green-600"
             >
                 Upload
             </button>

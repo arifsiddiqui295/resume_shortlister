@@ -7,7 +7,7 @@ import View_Edit from '../Components/View_Edit'
 const Users_Profile = () => {
     return (
         <>
-            <div className='bg-[#F8F9FA]'>
+            <div className='bg-[#F8F9FA] w-full'>
                 <Navbar />
                 <Student_Card />
                 <View_Edit />

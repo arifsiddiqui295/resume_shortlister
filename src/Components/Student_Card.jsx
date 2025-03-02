@@ -5,8 +5,8 @@ import { useStudent } from '../context/StudentProvider';
 const Student_Card = () => {
     const { setStudent } = useStudent();
     const [isOpen, setIsOpen] = useState(false);
-    const [fullName, setFullName] = useState('');
-    const [gender, setGender] = useState('');
+    const [fullName, setFullName] = useState();
+    const [gender, setGender] = useState();
     const [date, setDate] = useState("");
     const [location, setLocation] = useState('');
     const [hometown, setHometown] = useState('');
@@ -15,66 +15,47 @@ const Student_Card = () => {
     const [enrollment, setEnrollment] = useState('');
     const [branch, setBranch] = useState('');
     const [password, setPassword] = useState('');
-    const [isEdit, setIsEdit] = useState('');
     var [studentDetails, setStudentDetails] = useState({});
-    const { student } = useStudent();
     const add_Student_Details = async () => {
         try {
-            const name_parts = fullName.split(" ");
-            const first_name = name_parts[0];
-            const last_name = name_parts[1];
-            // console.log("first_name,last_name", first_name, last_name)
             const newStudent = {
                 email: email,
-                first_name: first_name,
-                last_name: last_name,
+                fullName: fullName,
                 gender: gender,
-                dob: date,
-                current_location: location,
+                date: date,
+                location: location,
                 hometown: hometown,
-                mobile_number: number,
-                branch: branch,
-                enrollment_no: enrollment,
-                permanent_address: hometown
+                number: number
             };
-            console.log("new Student from student card: ", newStudent)
-            // console.log("student: ",student)
-            if (isEdit) {
-                const response = await request('patch', `/student/${student}/`, newStudent);
-                console.log("Response:", response);
-                setStudentDetails(response)
-                setIsEdit(false);
-                setIsOpen(false);
-            }
+
             // const response = await request('post', "/", newStudent);
             // console.log("Response:", response);
 
-            // setStudentDetails(newStudent);
-            // setIsOpen(false);
+            setStudentDetails(newStudent);
+            setIsOpen(false);
         } catch (error) {
             console.error("Error adding student details:", error);
         }
     };
     const editStudent = () => {
-        // console.log("studentDetails:", studentDetails)
-        setEnrollment(studentDetails?.enrollment_no);
-        setBranch(studentDetails?.branch)
-        setFullName(studentDetails?.first_name + " " + studentDetails?.last_name)
-        setEmail(studentDetails?.email)
-        setGender(studentDetails?.gender);
-        setHometown(studentDetails?.hometown);
-        setDate(studentDetails?.dob)
-        setLocation(studentDetails?.current_location);
-        setHometown(studentDetails?.permanent_address)
-        setNumber(studentDetails?.mobile_number)
+        console.log("studentDetails:", studentDetails)
+        setEnrollment(studentDetails.enrollment_no);
+        setBranch(studentDetails.branch)
+        setFullName(studentDetails.first_name + " " + studentDetails.last_name)
+        setEmail(studentDetails.email)
+        setGender(studentDetails.gender);
+        setHometown(studentDetails.hometown);
+        setDate(studentDetails.dob)
+        setLocation(studentDetails.current_location);
+        setHometown(studentDetails.permanent_address.city)
+        setNumber(studentDetails.mobile_number)
         setIsOpen(true)
-        setIsEdit(true);
     }
     useEffect(() => {
         const student_information = async () => {
             try {
                 const res = await request("get", "/student/");
-                // console.log("res from student card get: ", res);
+                console.log("res from student card get: ", res);
                 if (res.length > 0) {
                     setStudentDetails(res[0]); // Store full student data
                     setStudent(res[0].enrollment_no); // Store enrollment number in Context
@@ -87,10 +68,10 @@ const Student_Card = () => {
     }, [setStudent]);
     return (
         <>
-            <div className="bg-white p-6 shadow-md rounded-lg max-w-3xl mx-auto">
+            <div className="bg-white p-6  shadow-md rounded-lg max-w-xl   md:max-w-3xl mx-auto">
                 {/* Header Section */}
-                <div className="flex justify-between items-center border-b pb-4 mb-4">
-                    <div className="flex items-center gap-4">
+                <div className="flex justify-between  items-center md:border-b md:pb-4 mb-4">
+                    <div className="flex items-center gap-3 md:gap-4">
                         {/* Profile Image */}
                         <img
                             src="https://images.unsplash.com/photo-1590411506193-00ed62b2d08d?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
@@ -123,7 +104,7 @@ const Student_Card = () => {
                 </div>
 
                 {/* User Info */}
-                <div className="grid grid-cols-2 gap-4 text-sm text-gray-700">
+                <div className="md:grid grid-cols-2 gap-4 text-sm hidden text-gray-700">
                     <div>
                         <p className="font-medium">Enrollment Number</p>
                         <p className="text-gray-500">{studentDetails.enrollment_no}</p>

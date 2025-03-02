@@ -123,7 +123,7 @@ const Student_Career = () => {
     return (
         <>
             <ToastContainer />
-            <div className="bg-white rounded-lg p-6 shadow-md w-[60vw]">
+            <div className="bg-white rounded-lg p-6  shadow-md w-full  md:w-[60vw]">
                 <div className="flex justify-between items-center">
                     <h2 className="text-lg font-semibold">Your career preferences</h2>
 
@@ -135,9 +135,9 @@ const Student_Career = () => {
                         Add
                     </button>
                 </div>
-                <div className="flex flex-col gap-6 mt-4">
+                <div className="flex flex-col gap-6  mt-4">
                     {/* Preferred Job Type */}
-                    <div className="flex gap-52">
+                    <div className="flex md:gap-52 gap-40">   
                         <div>
                             <h3 className="text-sm font-medium text-gray-600">Preferred job type</h3>
                             <div className='flex gap-1'>

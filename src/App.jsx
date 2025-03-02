@@ -27,9 +27,17 @@ const App = () => {
             }
           />
           <Route path='/student-login' element={<StudentLogin />} />
-          <Route path='/job' element={<Job />} />
+          <Route path='/job' element={
+            <ProtectedRoutes>
+              <Job />
+            </ProtectedRoutes>
+          } />
           <Route path='/recuiter-search' element={<RecuiterSearch />} />
-          <Route path='/application-status' element={<ApplicationStatus />} />
+          <Route path='/application-status' element={
+            <ProtectedRoutes>
+              <ApplicationStatus />
+            </ProtectedRoutes>
+          } />
           <Route path='/recuiter-results' element={<RecruiterSearchResults />} />
           <Route path='*' element={<NotFound />} />
         </Routes>

@@ -4,7 +4,7 @@ import Job_apply from './Job_apply'
 
 const Home_Name = () => {
     return (
-        <div className='py-8 px-20'>
+        <div className='md:py-8 py-4 px-6 md:px-20'>
             <div className='flex justify-between'>
                 <h1 className='font-semibold text-xl'>Companies</h1>
                 <Button

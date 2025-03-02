@@ -50,6 +50,8 @@ const Quotes = () => {
 
   return (
     <>
+      {/* Quotes Section  */}
+
       <section className="py-8 w-full px-4 md:px-20">
         <div className="flex md:flex-row flex-col  justify-between">
           <div className="flex flex-col ">
@@ -58,7 +60,7 @@ const Quotes = () => {
               From our users
             </h2>
           </div>
-          <div className="relative flex justify-center gap-4">
+          <div className="relative mb-2 flex justify-center gap-4">
             <button
               className={`custom-button-prev border border-[#c2bfbf] rounded-xl w-16 h-16 text-2xl hover:bg-gray-200 ${
                 prevDisabled ? "opacity-50 cursor-not-allowed" : ""
@@ -127,6 +129,7 @@ const Quotes = () => {
           <Feature_Calculator />
           <Feature_Calculator />
         </div>
+        {/*! Removed Part  */}
         {/* <div className="py-10 flex flex-col items-center rounded-md w-full bg-[#CEDEFF80]">
           <h1 className="font-bold text-center text-4xl mb-12">Our top picks for 2024 are here!</h1>
           <p className="text-center mx-auto max-w-2xl font-normal text-xl">
@@ -136,70 +139,82 @@ const Quotes = () => {
             <Button className="mt-2 bg-[#2B308B] px-5 py-2 text-white text-lg rounded-lg " text="Explore our 10 of 10" />
           </div>
         </div> */}
+      </section>
 
-        <div className="w-full  justify-center">
-          <button
-            className={`custom-button-prev border border-[#c2bfbf] rounded-xl  w-16 h-16 text-2xl hover:bg-gray-200 ${
-              prevDisabled ? "opacity-50 cursor-not-allowed" : ""
-            }`}
-            aria-label="Previous"
-            disabled={prevDisabled} // Disable button if prevDisabled is true
-            onClick={(e) => {
-              if (prevDisabled) e.preventDefault();
-            }} // Prevent click if disabled
-          >
-            <i className="ri-arrow-left-line"></i>
-          </button>
-          <button
-            className={`custom-button-next border border-[#c2bfbf] rounded-xl w-16 h-16 text-2xl hover:bg-gray-200 ${
-              nextDisabled ? "opacity-50 cursor-not-allowed" : ""
-            }`}
-            aria-label="Next"
-            disabled={nextDisabled} // Disable button if nextDisabled is true
-            onClick={(e) => {
-              if (nextDisabled) e.preventDefault();
-            }} // Prevent click if disabled
-          >
-            <i className="ri-arrow-right-line"></i>
-          </button>
-
-          <Swiper
-            modules={[Navigation]}
-            spaceBetween={30}
-            slidesPerView={3}
-            navigation={{
-              nextEl: ".custom-button-next",
-              prevEl: ".custom-button-prev",
-            }}
-            onSlideChange={handleSlideChange}
-            onInit={(swiper) => handleSlideChange(swiper)}
-            className="w-full hidden md:block"
-          >
-            {quotes.map((quote, index) => (
-              <SwiperSlide key={index}>
-                <Alumini />
-              </SwiperSlide>
-            ))}
-          </Swiper>
-          <Swiper
-            modules={[Navigation]}
-            spaceBetween={30}
-            slidesPerView={1}
-            navigation={{
-              nextEl: ".custom-button-next",
-              prevEl: ".custom-button-prev",
-            }}
-            onSlideChange={handleSlideChange}
-            onInit={(swiper) => handleSlideChange(swiper)}
-            className="w-full md:hidden"
-          >
-            {quotes.map((quote, index) => (
-              <SwiperSlide key={index}>
-                <Alumini />
-              </SwiperSlide>
-            ))}
-          </Swiper>
+      {/*! Alumini Section  */}
+      <section className="py-8 w-full px-4 md:px-20">
+        <div className="flex md:flex-row flex-col  justify-between">
+          <div className="flex flex-col ">
+            <p className="font-medium">Quotes</p>
+            <h2 className="text-3xl font-semibold mb-6 text-center">
+              From our users
+            </h2>
+          </div>
+          <div className="relative flex justify-center gap-4">
+            <button
+              className={`custom-button-prev border border-[#c2bfbf] rounded-xl w-16 h-16 text-2xl hover:bg-gray-200 ${
+                prevDisabled ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+              aria-label="Previous"
+              disabled={prevDisabled} // Disable button if prevDisabled is true
+              onClick={(e) => {
+                if (prevDisabled) e.preventDefault();
+              }} // Prevent click if disabled
+            >
+              <i className="ri-arrow-left-line"></i>
+            </button>
+            <button
+              className={`custom-button-next border border-[#c2bfbf] rounded-xl w-16 h-16 text-2xl hover:bg-gray-200 ${
+                nextDisabled ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+              aria-label="Next"
+              disabled={nextDisabled} // Disable button if nextDisabled is true
+              onClick={(e) => {
+                if (nextDisabled) e.preventDefault();
+              }} // Prevent click if disabled
+            >
+              <i className="ri-arrow-right-line"></i>
+            </button>
+          </div>
         </div>
+
+        {/* Swiper Slider */}
+        <Swiper
+          modules={[Navigation]}
+          spaceBetween={30}
+          slidesPerView={3}
+          navigation={{
+            nextEl: ".custom-button-next",
+            prevEl: ".custom-button-prev",
+          }}
+          onSlideChange={handleSlideChange}
+          onInit={(swiper) => handleSlideChange(swiper)}
+          className="w-full hidden md:block"
+        >
+          {quotes.map((quote, index) => (
+            <SwiperSlide key={index}>
+              <Alumini />
+            </SwiperSlide>
+          ))}
+        </Swiper>
+        <Swiper
+          modules={[Navigation]}
+          spaceBetween={30}
+          slidesPerView={1}
+          navigation={{
+            nextEl: ".custom-button-next",
+            prevEl: ".custom-button-prev",
+          }}
+          onSlideChange={handleSlideChange}
+          onInit={(swiper) => handleSlideChange(swiper)}
+          className="w-full md:hidden"
+        >
+          {quotes.map((quote, index) => (
+            <SwiperSlide key={index}>
+              <Alumini />
+            </SwiperSlide>
+          ))}
+        </Swiper>
       </section>
     </>
   );

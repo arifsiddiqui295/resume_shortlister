@@ -21,8 +21,8 @@ const Home = () => {
       <Line className="border border-[#D8D8D8] w-full" />
       <Home_Name />
       <Quotes />
-      {/* <Job_Collection />
-      <Footer /> */}
+      {/* <Job_Collection /> */}
+      <Footer />
     </>
   );
 };

@@ -100,8 +100,8 @@ const Student_InternShips = () => {
     }
     return (
         <>
-            <div id='student-internship'>
-                <div className="bg-white rounded-lg p-6 shadow-md w-[60vw]">
+            <div>
+                <div className="bg-white rounded-lg p-6 shadow-md w-full  md:w-[60vw]">
                     <div className="flex justify-between items-center">
                         <h2 className="text-lg font-semibold">Internships</h2>
                         <button

@@ -17,7 +17,7 @@ const Career_Skills = () => {
 
     return (
         <div>
-            <div className=' flex flex-col gap-5'>
+            <div className=' flex flex-col md:p-0 px-4  gap-5'>
                 <Student_Career />
                 <Student_Education />
                 <Student_Skills />
