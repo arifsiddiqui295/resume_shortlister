@@ -106,7 +106,7 @@ const ApplicationStatus = () => {
             console.log("res from getApplicationStatus", res);
             const com = res.concat(res);
             console.log(com);
-            setCompanies(com);
+            setCompanies(res);
         }
         getApplicationStatus();
     }, [])
