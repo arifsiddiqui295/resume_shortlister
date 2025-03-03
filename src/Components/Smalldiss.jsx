@@ -12,10 +12,10 @@ export default function Smalldis({ jobs, handleCurrent }) {
                 Job Listings
             </h2>
 
-            <div className="w-full flex flex-col gap-4">
+            <div className="w-full flex flex-col gap-4 min-h-[400px]">
                 {jobs.map((job, idx) => (
                     <div
-                        key={job.id || idx} // Use job.id if available, otherwise fallback to idx
+                        key={job.id || idx}
                         className="w-full cursor-pointer hover:scale-105 transition-transform duration-300"
                         onClick={() => handleClick(idx)}
                     >

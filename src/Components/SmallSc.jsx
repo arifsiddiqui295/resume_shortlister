@@ -1,6 +1,21 @@
 import React from "react";
-
+import { useState } from "react";
+import request from "../api/request";
+import { useNavigate } from "react-router-dom";
 export default function SmallSc({ jobs }) {
+    const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
+    const applyToJob = async (job) => {
+        console.log("Job:", job);
+        setLoading(true);
+        const res = await request('patch', `/jobs/apply_job/${job.id}/`, {
+            "status": "Applied"
+        });
+        console.log("res from applyToJob: ", res);
+        navigate('/application-status');
+        setLoading(false);
+    };
+    console.log("Job:", jobs);
     return (
         <div className="w-full p-4 flex flex-col gap-6">
             {jobs.map((job, idx) => (
@@ -39,8 +54,24 @@ export default function SmallSc({ jobs }) {
 
                     {/* Apply Button */}
                     <div className="mt-4 flex justify-center">
-                        <button className="bg-[#4d6bfe] text-white px-5 py-2 rounded-lg shadow-md hover:bg-[#3b5edb] transition-all">
-                            Apply Now
+                        <button
+                            onClick={() => { applyToJob(job) }}
+                            type="button"
+                            className="bg-[#4d6bfe] text-white px-6 py-2 rounded-lg shadow-md hover:bg-[#3b5edb] transition-all border-none"
+                        >
+                            {
+                                !loading ? (
+                                    <p className="text-lg">Apply Now</p>
+                                ) : (
+                                    <>
+                                        <div className="flex space-x-2 justify-center items-center dark:invert">
+                                            <div className="h-4 w-4 bg-black rounded-full animate-bounce [animation-delay:-0.3s]" />
+                                            <div className="h-4 w-4 bg-black rounded-full animate-bounce [animation-delay:-0.3s]" />
+                                            <div className="h-4 w-4 bg-black rounded-full animate-bounce [animation-delay:-0.3s]" />
+                                        </div>
+                                    </>
+                                )
+                            }
                         </button>
                     </div>
                 </div>

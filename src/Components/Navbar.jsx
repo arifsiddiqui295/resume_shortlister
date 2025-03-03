@@ -69,6 +69,13 @@ const Navbar = () => {
       {menuOpen && (
         <div className="absolute top-[10vh] left-0 w-2/4 bg-white shadow-md flex flex-col items-start gap-4 py-4 md:hidden">
           <a
+            href="/"
+            className="text-lg pl-8 w-full hover:bg-[#2B308B] hover:text-white"
+            onClick={closeMenu}
+          >
+            Home
+          </a>
+          <a
             href="job"
             className="text-lg pl-8 w-full hover:bg-[#2B308B] hover:text-white"
             onClick={closeMenu}

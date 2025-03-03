@@ -4,25 +4,27 @@ import request from "../api/request";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constants";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../Components/Navbar";
+
 const StudentLogin = () => {
     const navigate = useNavigate();
     const [enrollment, setEnrollment] = useState('');
     const [password, setPassword] = useState('');
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [loading, setLoading] = useState(false);
+
     const loginHandler = async (e) => {
         e.preventDefault();
         console.log(enrollment, password)
         setLoading(true)
         try {
             const res = await request('post', '/login/', { username: enrollment, password: password })
-            console.log("res from login: ",res)
+            console.log("res from login: ", res)
             if (res) {
                 localStorage.setItem(ACCESS_TOKEN, res.access);
                 localStorage.setItem(REFRESH_TOKEN, res.refresh);
                 navigate("/profile")
             } else {
-                navigate("/studen-login")
+                navigate("/student-login")
             }
         } catch (error) {
             console.log(error)
@@ -30,9 +32,10 @@ const StudentLogin = () => {
             setLoading(false)
         }
     }
+
     return (
         <>
-        <Navbar />
+            <Navbar />
             <div className="bg-gray-50 font-[sans-serif]">
                 <div className="min-h-screen flex flex-col items-center justify-center py-6 px-4">
                     <div className="max-w-md w-full">
@@ -40,14 +43,14 @@ const StudentLogin = () => {
                             <img
                                 src="https://synques-dyn-cdn.s3.ap-south-1.amazonaws.com/oriental/images/logo.webp"
                                 alt="logo"
-                                className="w-96 mb-8 mx-auto block"
+                                className="w-64 md:w-96 mb-8 mx-auto block"
                             />
                         </a>
-                        <div className="p-8 rounded-2xl bg-white shadow">
+                        <div className="p-6 md:p-8 rounded-2xl bg-white shadow">
                             <h2 className="text-gray-800 text-center text-2xl font-bold">
                                 Login
                             </h2>
-                            <form className="mt-8 space-y-4">
+                            <form className="mt-6 space-y-4">
                                 <div>
                                     <label className="text-gray-800 text-sm mb-2 block">
                                         Enrollment no.
@@ -87,19 +90,17 @@ const StudentLogin = () => {
                                                 setPassword(e.target.value)
                                             }}
                                             type={passwordVisible ? "text" : "password"}
-
                                             required=""
                                             className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
                                             placeholder="Enter password"
                                         />
                                         {passwordVisible ? (
-                                                <img
+                                            <img
                                                 onClick={() => {
                                                     setPasswordVisible(!passwordVisible)
                                                 }}
                                                 className="w-4 h-4 absolute right-4 cursor-pointer"
-                                                src="https://www.svgrepo.com/show/380007/eye-password-hide.svg" alt="" /> 
-
+                                                src="https://www.svgrepo.com/show/380007/eye-password-hide.svg" alt="" />
                                         ) : (
                                             <svg
                                                 onClick={() => {
@@ -118,7 +119,6 @@ const StudentLogin = () => {
                                             </svg>
                                         )}
                                     </div>
-                                 
                                 </div>
                                 <div className="flex flex-wrap items-center justify-between gap-4">
                                     <div className="flex items-center">
@@ -155,7 +155,7 @@ const StudentLogin = () => {
                                                 <p className="text-lg">Login</p>
                                             ) : (
                                                 <>
-                                                    <div className="flex space-x-2 justify-center items-center  dark:invert">
+                                                    <div className="flex space-x-2 justify-center items-center dark:invert">
                                                         <div className="h-4 w-4 bg-black rounded-full animate-bounce [animation-delay:-0.3s]" />
                                                         <div className="h-4 w-4 bg-black rounded-full animate-bounce [animation-delay:-0.3s]" />
                                                         <div className="h-4 w-4 bg-black rounded-full animate-bounce [animation-delay:-0.3s]" />
@@ -163,7 +163,6 @@ const StudentLogin = () => {
                                                 </>
                                             )
                                         }
-
                                     </button>
                                 </div>
                             </form>
@@ -174,8 +173,5 @@ const StudentLogin = () => {
         </>
     )
 }
+
 export default StudentLogin;
-
-
-
-

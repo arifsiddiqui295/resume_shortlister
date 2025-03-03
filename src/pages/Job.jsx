@@ -8,7 +8,6 @@ import request from '../api/request';
 export default function Job() {
     const [jobs, setJobs] = useState([]);
     const [currentJobIdx, setCurrentJobIdx] = useState(0);
-    const [loading, setLoading] = useState(false);
 
     // Fetch job data from the API
     useEffect(() => {
@@ -26,11 +25,7 @@ export default function Job() {
 
     // Handle job selection
     const handleCurrent = (idx) => {
-        setLoading(true); // Show loading state
-        setTimeout(() => {
-            setCurrentJobIdx(idx);
-            setLoading(false); // Hide loading state after a short delay
-        }, 100); // Simulate a delay for smoother UI transition
+        setCurrentJobIdx(idx);
     };
 
     return (
@@ -44,13 +39,7 @@ export default function Job() {
                         <Smalldis jobs={jobs} handleCurrent={handleCurrent} />
 
                         {/* Right Section: Job Details */}
-                        {loading ? (
-                            <div className="w-full flex justify-center items-center">
-                                <p>Loading...</p>
-                            </div>
-                        ) : (
-                            <Completedis job={jobs[currentJobIdx]} />
-                        )}
+                        <Completedis key={jobs[currentJobIdx].id} job={jobs[currentJobIdx]} />
                     </div>
 
                     {/* Mobile View */}
