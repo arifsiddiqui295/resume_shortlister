@@ -52,7 +52,7 @@ const Student_Competetive_Exams = () => {
                 score: score,
                 student
             }
-
+            console.log("newExam", newExam);
             if (!newExam.exam_name || !newExam.score) {
                 alert("Please select an exam and enter a score");
                 return;
@@ -60,8 +60,10 @@ const Student_Competetive_Exams = () => {
 
             if (isEdit) {
                 const res = await request('patch', `/competitive_exams/${primaryKey}/`, newExam);
+                console.log("res from patch", res);
+                console.log("primaryKey", primaryKey);
                 const updatedExams = allSelectedExams.map(exam =>
-                    exam.id === primaryKey ? res : exam
+                    exam.id === res.id ? { ...exam, ...res } : exam
                 );
                 setAllSelectedExams(updatedExams);
             } else {
@@ -71,7 +73,7 @@ const Student_Competetive_Exams = () => {
             closeModal();
         } catch (error) {
             console.error("Error saving exam:", error);
-            alert("Failed to save exam. Please try again.");
+            // alert("Failed to save exam. Please try again.");
         }
     };
     const addExams = (exam) => {
@@ -121,11 +123,11 @@ const Student_Competetive_Exams = () => {
                 setAllSelectedExams(matchedCompetetiveExams)
             } catch (error) {
                 console.error("Error fetching exams:", error);
-                alert("Failed to load exams. Please try again.");
+                // alert("Failed to load exams. Please try again.");
             }
         }
         getStudentCompetetiveExams();
-    }, [student])
+    }, [])
     const competitiveExams = [
         "TOEFL",
         "GMAT",
@@ -164,7 +166,7 @@ const Student_Competetive_Exams = () => {
                         {allSelectedExams && (
                             allSelectedExams.map((value, index) => (
                                 <div
-                                    key={index}
+                                    key={value.id}
                                 >
                                     <p className='flex gap-1 text-lg'>
                                         {value.exam_name}

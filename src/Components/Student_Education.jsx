@@ -96,7 +96,7 @@ const Student_Education = () => {
             }
         }
         getStudentEducationDetails();
-    }, [])
+    }, [student])
     const isSchoolLevel = ["Class 10", "Class 12"].includes(educationData.qualification);
     const isCollegeLevel = !isSchoolLevel && educationData.qualification !== "";
 

@@ -89,13 +89,14 @@ const Student_InternShips = () => {
             setSelectInternship(studentInternships)
         }
         getStudentInternshiDetails();
-    }, [])
+    }, [student])
     const closeModal = () => {
         setCompanyName('');
         setDescription('');
         setStartDate('');
         setEndDate('');
         setSkills('');
+        setIsEdit(false);
         setIsModalOpen(false)
     }
     return (

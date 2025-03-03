@@ -67,7 +67,7 @@ const Student_Accomplishments = () => {
             setAccomplishments(newStudentAccomplishments)
         }
         getStudetnAccomplishmentsDetails();
-    }, [])
+    }, [student])
     return (
         <>
             <ToastContainer position="top-right" autoClose={3000} hideProgressBar={true} />

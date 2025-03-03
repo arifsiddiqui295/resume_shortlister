@@ -23,7 +23,7 @@ const Student_Skills = () => {
             }
         }
         studentSkills();
-    }, [])
+    }, [student])
     const handleSkillChange = (skills) => {
         setSkills(skills)
     }

@@ -48,7 +48,7 @@ const Student_Profile_Summary = () => {
             }
         }
         getProfileSummaryFromServer();
-    }, [profileSummary])
+    }, [student])
     return (
         <>
             <ToastContainer position="top-right" autoClose={3000} hideProgressBar={true} />

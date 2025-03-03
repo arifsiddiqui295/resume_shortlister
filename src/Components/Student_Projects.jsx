@@ -16,8 +16,8 @@ const Student_Projects = () => {
     const [isEdit, setIsEdit] = useState(false);
 
     const closeModal = () => {
-        setProjectDescription('');
         setProjectName('')
+        setProjectDescription('');
         setGitHubLInk('');
         setLiveLink('');
         setIsEdit(false)
@@ -29,7 +29,7 @@ const Student_Projects = () => {
     }
     const removeProject = async () => {
         // console.log("primaryKey",primaryKey)
-        // const res = await request('delete', `/project/${primaryKey}/`);
+        const res = await request('delete', `/project/${primaryKey}/`);
         const updatedProject = selectProject.filter(project => project.id != primaryKey);
         // console.log("updateProject: ", updatedProject);
         setSelectProject(updatedProject);
@@ -42,8 +42,8 @@ const Student_Projects = () => {
             description: projectDescription,
             skills_used: skills,
             student,
-            gitHubLink: gitHubLink,
-            liveLink: liveLink
+            github_link: gitHubLink,
+            hosted_link: liveLink
         }
         // console.log("newProject: ", newProject)
         // console.log("primaryKey: ", primaryKey)
@@ -81,13 +81,13 @@ const Student_Projects = () => {
     useEffect(() => {
         const getStudentProjectDetails = async () => {
             const res = await request('get', '/project/');
-            // console.log("res form student Project get", res);
+            console.log("res form student Project get", res);
             const matchedStudentProjects = res.filter((project => project.student === student));
             // console.log("matchedStudentProjects: ", matchedStudentProjects)
             setSelectProject(matchedStudentProjects)
         }
         getStudentProjectDetails();
-    }, [])
+    }, [student])
     return (
         <>
             <div>
@@ -125,13 +125,13 @@ const Student_Projects = () => {
                                             ))}
                                         </div>
                                         <div className='flex gap-3 items-center'>
-                                            {project.gitHubLink && (
-                                                <a href={project.gitHubLink} target="_blank" rel="noopener noreferrer" className="text-sm text-blue-500 underline mt-2 block">
+                                            {project.github_link && (
+                                                <a href={project.github_link} target="_blank" rel="noopener noreferrer" className="text-sm text-blue-500 underline mt-2 block">
                                                     GitHub Link
                                                 </a>
                                             )}
-                                            {project.liveLink && (
-                                                <a href={project.liveLink} target="_blank" rel="noopener noreferrer" className="text-blue-500 text-sm underline mt-2 block">
+                                            {project.hosted_link && (
+                                                <a href={project.hosted_link} target="_blank" rel="noopener noreferrer" className="text-blue-500 text-sm underline mt-2 block">
                                                     Live Project Link
                                                 </a>
                                             )}
@@ -222,7 +222,7 @@ const Student_Projects = () => {
                             {isEdit ? (
                                 <button
                                     onClick={removeProject}
-                                    className='text-[#275df5] font-semibold'>Remove Internship</button>
+                                    className='text-[#275df5] font-semibold'>Remove Project</button>
                             ) : (
                                 <button
                                     onClick={closeModal}
