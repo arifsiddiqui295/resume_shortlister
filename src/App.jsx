@@ -12,7 +12,6 @@ import ProtectedRoutes from './Components/ProtectedRoutes'
 import NotFound from './Components/NotFound'
 import { StudentProvider } from './context/StudentProvider'
 
-
 const App = () => {
   return (
     <StudentProvider>

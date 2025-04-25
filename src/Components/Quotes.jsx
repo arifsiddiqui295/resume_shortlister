@@ -62,9 +62,8 @@ const Quotes = () => {
           </div>
           <div className="relative mb-2 flex justify-center gap-4">
             <button
-              className={`custom-button-prev border border-[#c2bfbf] rounded-xl w-16 h-16 text-2xl hover:bg-gray-200 ${
-                prevDisabled ? "opacity-50 cursor-not-allowed" : ""
-              }`}
+              className={`custom-button-prev border border-[#c2bfbf] rounded-xl w-16 h-16 text-2xl hover:bg-gray-200 ${prevDisabled ? "opacity-50 cursor-not-allowed" : ""
+                }`}
               aria-label="Previous"
               disabled={prevDisabled} // Disable button if prevDisabled is true
               onClick={(e) => {
@@ -74,9 +73,8 @@ const Quotes = () => {
               <i className="ri-arrow-left-line"></i>
             </button>
             <button
-              className={`custom-button-next border border-[#c2bfbf] rounded-xl w-16 h-16 text-2xl hover:bg-gray-200 ${
-                nextDisabled ? "opacity-50 cursor-not-allowed" : ""
-              }`}
+              className={`custom-button-next border border-[#c2bfbf] rounded-xl w-16 h-16 text-2xl hover:bg-gray-200 ${nextDisabled ? "opacity-50 cursor-not-allowed" : ""
+                }`}
               aria-label="Next"
               disabled={nextDisabled} // Disable button if nextDisabled is true
               onClick={(e) => {
@@ -145,16 +143,15 @@ const Quotes = () => {
       <section className="py-8 w-full px-4 md:px-20">
         <div className="flex md:flex-row flex-col  justify-between">
           <div className="flex flex-col ">
-            <p className="font-medium">Quotes</p>
+            {/* <p className="font-medium">Quotes</p> */}
             <h2 className="text-3xl font-semibold mb-6 text-center">
-              From our users
+              Our High Achievers
             </h2>
           </div>
           <div className="relative flex justify-center gap-4">
             <button
-              className={`custom-button-prev border border-[#c2bfbf] rounded-xl w-16 h-16 text-2xl hover:bg-gray-200 ${
-                prevDisabled ? "opacity-50 cursor-not-allowed" : ""
-              }`}
+              className={`custom-button-prev border border-[#c2bfbf] rounded-xl w-16 h-16 text-2xl hover:bg-gray-200 ${prevDisabled ? "opacity-50 cursor-not-allowed" : ""
+                }`}
               aria-label="Previous"
               disabled={prevDisabled} // Disable button if prevDisabled is true
               onClick={(e) => {
@@ -164,9 +161,8 @@ const Quotes = () => {
               <i className="ri-arrow-left-line"></i>
             </button>
             <button
-              className={`custom-button-next border border-[#c2bfbf] rounded-xl w-16 h-16 text-2xl hover:bg-gray-200 ${
-                nextDisabled ? "opacity-50 cursor-not-allowed" : ""
-              }`}
+              className={`custom-button-next border border-[#c2bfbf] rounded-xl w-16 h-16 text-2xl hover:bg-gray-200 ${nextDisabled ? "opacity-50 cursor-not-allowed" : ""
+                }`}
               aria-label="Next"
               disabled={nextDisabled} // Disable button if nextDisabled is true
               onClick={(e) => {

@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react'
+import { ToastContainer, toast } from 'react-toastify';
 import request from '../api/request';
 import { useStudent } from '../context/StudentProvider';
 import SkillsFilter from './SkillsFilter';
+import 'react-toastify/dist/ReactToastify.css';
+
 const Student_Certifications = () => {
     const { student } = useStudent();
     const [isModalOpen, setIsModalOpen] = useState(false)
@@ -13,78 +16,111 @@ const Student_Certifications = () => {
     const [selectedSkills, setSelectedSkills] = useState([]);
     const [certificationsDetail, setCertificationsDetail] = useState([]);
     const [isEdit, setIsEdit] = useState(false);
-    // Separate states for From and To dates
+
     const addingCertificate = async () => {
         if (!certificateName || !organizationName || !issueDate || !credentials || selectedSkills.length === 0) {
-            alert("Please fill in all fields.");
+            toast.error("Please fill in all fields.");
             return;
         }
-        const newCertificate = {
-            certificate_name: certificateName,
-            organization_name: organizationName,
-            certificate_id: credentials,
-            issue_date: issueDate,
-            skills_learned: [selectedSkills], student
+
+        try {
+            const newCertificate = {
+                certificate_name: certificateName,
+                organization_name: organizationName,
+                certificate_id: credentials,
+                issue_date: issueDate,
+                skills_learned: [selectedSkills],
+                student
+            }
+
+            if (isEdit) {
+                const res = await request('patch', `/certificate/${primaryKey}/`, newCertificate);
+                const updatedCertificates = certificationsDetail.map(certificate =>
+                    certificate.id === res.id ? { ...certificate, ...res } : certificate
+                );
+                setCertificationsDetail(updatedCertificates);
+                toast.success("Certificate updated successfully!");
+            } else {
+                const res = await request('post', '/certificate/', newCertificate);
+                const updatedCertificates = [...certificationsDetail, res];
+                setCertificationsDetail(updatedCertificates);
+                toast.success("Certificate added successfully!");
+            }
+        } catch (error) {
+            toast.error(error.message || "Failed to save certificate. Please try again.");
+        } finally {
+            closeModal();
         }
-        console.log("newCertificate: ", newCertificate);
-        if (isEdit) {
-            const res = await request('patch', `/certificate/${primaryKey}/`, newCertificate);
-            const updatedCertificates = certificationsDetail.map(certificate =>
-                certificate.id === res.id ? { ...certificate, ...res } : certificate
-            );
-            setCertificationsDetail(updatedCertificates);
-        } else {
-            const res = await request('post', '/certificate/', newCertificate);
-            const updatedCertificates = [...certificationsDetail, res];
-            // console.log(updatedInternships);
-            setCertificationsDetail(updatedCertificates);
-            // console.log("res", res);
-        }
-        closeModal();
-        // setCertificationsDetail(newCertificate);
-        // setIsModalOpen(false)
     }
+
     const handleSkillChange = (skills) => {
         setSelectedSkills(skills)
     }
+
     const updateCertificate = async (certificate) => {
-        setCertificateName(certificate.certificate_name);
-        setOrganizationName(certificate.organization_name);
-        setIssueDate(certificate.issue_date);
-        setCredentials(certificate.certificate_id);
-        setPrimaryKey(certificate.id)
-        setSelectedSkills(certificate.skills_learned[0])
-        setIsModalOpen(true);
-        setIsEdit(true)
+        try {
+            setCertificateName(certificate.certificate_name);
+            setOrganizationName(certificate.organization_name);
+            setIssueDate(certificate.issue_date);
+            setCredentials(certificate.certificate_id);
+            setPrimaryKey(certificate.id)
+            setSelectedSkills(certificate.skills_learned[0])
+            setIsModalOpen(true);
+            setIsEdit(true)
+        } catch (error) {
+            toast.error("Failed to load certificate details. Please try again.");
+        }
     }
-    const deleteCertificate = async (certificate) => {
-        setPrimaryKey(certificate.id);
-        console.log("certificate from delete", certificate)
-        const res = await request('delete', `/certificate/${certificate.id}/`);
-        const updatedCertificates = certificationsDetail.filter(cert => cert.id !== certificate.id);
-        // console.log("updateProject: ", updatedProject);
-        setCertificationsDetail(updatedCertificates);
-        closeModal();
+
+    const deleteCertificate = async () => {
+        try {
+            await request('delete', `/certificate/${primaryKey}/`);
+            const updatedCertificates = certificationsDetail.filter(cert => cert.id !== primaryKey);
+            setCertificationsDetail(updatedCertificates);
+            toast.success("Certificate deleted successfully!");
+        } catch (error) {
+            toast.error(error.message || "Failed to delete certificate. Please try again.");
+        } finally {
+            closeModal();
+        }
     }
+
     useEffect(() => {
         const handleSaveChanges = async () => {
-            const res = await request('get', '/certificate/');
-            const studentCertifications = res.filter(certificate => certificate.student === student)
-            setCertificationsDetail(studentCertifications)
+            try {
+                const res = await request('get', '/certificate/');
+                const studentCertifications = res.filter(certificate => certificate.student === student)
+                setCertificationsDetail(studentCertifications)
+            } catch (error) {
+                toast.error(error.message || "Failed to load certifications. Please try again.");
+            }
         }
         handleSaveChanges();
     }, [student])
+
     const closeModal = () => {
         setCertificateName('');
         setOrganizationName('');
         setIssueDate('');
         setCredentials('');
-        setSelectedSkills([]); // Reset to an empty array
+        setSelectedSkills([]);
         setIsEdit(false);
         setIsModalOpen(false);
     };
+
     return (
         <>
+            <ToastContainer position="top-right"
+                toastStyle={{
+                    width: '90%', // Limit width on mobile
+                    maxWidth: '400px', // Maximum width for larger screens
+                    margin: '10px auto', // Center the toast
+                    borderRadius: '8px', // Rounded corners
+                    fontSize: '14px', // Smaller font size for mobile
+                    padding: '12px', // Adequate padding
+                    wordBreak: 'break-word', // Prevent overflow
+                }}
+                autoClose={3000} hideProgressBar={true} />
             <div>
                 <div className="bg-white rounded-lg p-6 shadow-md w-full  md:w-[60vw]">
                     <div className="flex justify-between items-center">
@@ -94,7 +130,7 @@ const Student_Certifications = () => {
                             className="text-[#275DF5] text-md font-semibold">Add</button>
                     </div>
                     <div className='flex gap-4 flex-col'>
-                        {certificationsDetail.length > 0 && (
+                        {certificationsDetail.length > 0 ? (
                             certificationsDetail.map((certificate, index) => (
                                 <div
                                     key={index}
@@ -108,7 +144,7 @@ const Student_Certifications = () => {
                                             <div className="flex flex-wrap gap-2">
                                                 {certificate.skills_learned && certificate.skills_learned[0].map((skill, index) => (
                                                     <span
-                                                        key={index} // Add a unique key for each skill
+                                                        key={index}
                                                         className="inline-block bg-gray-100 rounded-full px-3 py-1 text-sm font-semibold text-gray-700"
                                                     >
                                                         {skill}
@@ -119,27 +155,23 @@ const Student_Certifications = () => {
 
                                         <div className="flex gap-3 ml-4">
                                             <button
-                                                onClick={() => { updateCertificate(certificate) }}
+                                                onClick={() => updateCertificate(certificate)}
                                                 className="text-gray-500 hover:text-blue-500 transition-colors duration-200">
                                                 <i className="ri-edit-box-line text-xl"></i>
                                             </button>
                                             <button
-                                                onClick={() => { deleteCertificate(certificate) }}
+                                                onClick={() => updateCertificate(certificate)}
                                                 className="text-gray-500 hover:text-red-500 transition-colors duration-200">
                                                 <i className="ri-delete-bin-6-line text-xl"></i>
                                             </button>
                                         </div>
                                     </div>
-
                                 </div>
                             ))
+                        ) : (
+                            <div>No Certificates added yet</div>
                         )}
                     </div>
-                    {certificationsDetail.length <= 0 && (
-                        <div>
-                            No Certificates added yet
-                        </div>
-                    )}
                 </div>
             </div>
             {isModalOpen && (
@@ -226,7 +258,7 @@ const Student_Certifications = () => {
                         <SkillsFilter onSkillChange={handleSkillChange} skillsSelected={selectedSkills} />
                         <div className='flex justify-end gap-2'>
                             <button
-                                // onClick={() => deleteProfileSummary()}
+                                onClick={deleteCertificate}
                                 className='text-[#275df5] font-semibold'>Delete</button>
                             <button
                                 onClick={addingCertificate}

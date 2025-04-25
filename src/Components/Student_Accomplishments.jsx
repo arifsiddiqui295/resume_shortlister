@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import request from '../api/request';
 import { useStudent } from '../context/StudentProvider';
@@ -8,70 +8,101 @@ const Student_Accomplishments = () => {
     const { student } = useStudent();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [inputValue, setInputValue] = useState('');
-    const [accomplishments, setAccomplishments] = useState(
-        { id: '' },
-        { leadership: '' },
-        { research_paper: '' },
-        { summary: '' }
-    );
+    const [accomplishments, setAccomplishments] = useState({
+        id: '',
+        leadership: '',
+        research_paper: '',
+        summary: ''
+    });
     const [hasLeadershipRole, setHasLeadershipRole] = useState(false);
     const [leadershipDescription, setLeadershipDescription] = useState('');
     const [hasResearchPapers, setHasResearchPapers] = useState(false);
     const [researchDescription, setResearchDescription] = useState('');
 
     const saveAccomplishments = async () => {
-        const Student_Accomplishments = {
-            summary: inputValue,
-            leadership: hasLeadershipRole ? leadershipDescription : null,
-            research_paper: hasResearchPapers ? researchDescription : null,
-            student
-        };
+        try {
+            if (!inputValue.trim()) {
+                toast.error('Please enter a summary of your accomplishments');
+                return;
+            }
 
-        console.log("Student_Accomplishments", Student_Accomplishments);
-        const res = await request('post', '/accomplishments/', Student_Accomplishments);
-        console.log("response from student accomplishments: ", response);
-        const matchedStudentAccomplishments = res.filter(accomplishments => accomplishments.student === student);
-        console.log("matchedStudentAccomplishments: ", matchedStudentAccomplishments);
-        const newStudentAccomplishments = {
-            id: matchedStudentAccomplishments[1].id,
-            leadership: matchedStudentAccomplishments[1].leadership,
-            research_paper: matchedStudentAccomplishments[1].research_paper,
-            summary: matchedStudentAccomplishments[1].summary
+            const Student_Accomplishments = {
+                summary: inputValue,
+                leadership: hasLeadershipRole ? leadershipDescription : null,
+                research_paper: hasResearchPapers ? researchDescription : null,
+                student
+            };
+
+            const res = await request('post', '/accomplishments/', Student_Accomplishments);
+
+            if (!res || !res.id) {
+                throw new Error('Invalid response from server');
+            }
+
+            const newStudentAccomplishments = {
+                id: res.id,
+                leadership: res.leadership || '',
+                research_paper: res.research_paper || '',
+                summary: res.summary || ''
+            };
+            setAccomplishments(newStudentAccomplishments);
+            toast.success('Accomplishments saved successfully!');
+            setIsModalOpen(false);
+        } catch (error) {
+            console.error('Error saving accomplishments:', error);
+            toast.error(error.message || 'Failed to save accomplishments. Please try again.');
         }
-        console.log("newStudentAccomplishments:", newStudentAccomplishments)
-        setAccomplishments(newStudentAccomplishments)
-        // setIsModalOpen(false);
     };
 
     const handleInputChange = (e) => {
-        const words = e.target.value.split(' ');
-        if (words.length <= 50) {
-            setInputValue(e.target.value);
-        } else {
-            toast.error('Only 50 words allowed.');
+        try {
+            const text = e.target.value;
+            const words = text.split(/\s+/).filter(word => word.length > 0);
+            if (words.length <= 50) {
+                setInputValue(text);
+            } else {
+                toast.error('Only 50 words allowed in summary');
+            }
+        } catch (error) {
+            console.error('Error handling input:', error);
+            toast.error('Error processing your input');
         }
     };
+
     useEffect(() => {
-        const getStudetnAccomplishmentsDetails = async () => {
-            const res = await request('get', '/accomplishments/');
-            // console.log("res from get student accomplishments: ", res);
-            const matchedStudentAccomplishments = res.filter(accomplishments => accomplishments.student === student);
-            // console.log("matchedStudentAccomplishments: ", matchedStudentAccomplishments);
-            const newStudentAccomplishments = {
-                id: matchedStudentAccomplishments[0].id,
-                leadership: matchedStudentAccomplishments[0].leadership,
-                research_paper: matchedStudentAccomplishments[0].research_paper,
-                summary: matchedStudentAccomplishments[0].summary
+        const getStudentAccomplishmentsDetails = async () => {
+            if (!student) return;
+
+            try {
+                const res = await request('get', '/accomplishments/');
+                const matchedStudentAccomplishments = res.filter(
+                    accomplishment => accomplishment.student === student
+                );
+
+                if (matchedStudentAccomplishments.length > 0) {
+                    const firstAccomplishment = matchedStudentAccomplishments[0];
+                    const newStudentAccomplishments = {
+                        id: firstAccomplishment.id || '',
+                        leadership: firstAccomplishment.leadership || '',
+                        research_paper: firstAccomplishment.research_paper || '',
+                        summary: firstAccomplishment.summary || ''
+                    };
+                    setAccomplishments(newStudentAccomplishments);
+                    setInputValue(firstAccomplishment.summary || '');
+                    setLeadershipDescription(firstAccomplishment.leadership || '');
+                    setResearchDescription(firstAccomplishment.research_paper || '');
+                }
+            } catch (error) {
+                console.error('Error fetching accomplishments:', error);
+                toast.error(error.message || 'Failed to load accomplishments');
             }
-            // console.log("newStudentAccomplishments:", newStudentAccomplishments)
-            setAccomplishments(newStudentAccomplishments)
-        }
-        getStudetnAccomplishmentsDetails();
-    }, [student])
+        };
+        getStudentAccomplishmentsDetails();
+    }, [student]);
+
     return (
         <>
-            <ToastContainer position="top-right" autoClose={3000} hideProgressBar={true} />
-            <div className="bg-white rounded-lg p-6 shadow-md w-full  md:w-[60vw]">
+            <div className="bg-white rounded-lg p-6 shadow-md w-full md:w-[60vw]">
                 <div className="flex justify-between items-center">
                     <h2 className="text-lg font-semibold">Accomplishments</h2>
                     <button
@@ -82,15 +113,11 @@ const Student_Accomplishments = () => {
                     </button>
                 </div>
                 <div className='mt-2 flex gap-2 flex-wrap'>
-                    {accomplishments ? (
-                        <div>
-                            <p><strong>Summary:</strong> {accomplishments.summary}</p>
-                            <p><strong>Research Paper:</strong> {accomplishments.research_paper}</p>
-                            <p><strong>Leadership Role:</strong> {accomplishments.leadership}</p>
-                        </div>
-                    ) : (
-                        <div>Write about your key accomplishments...</div>
-                    )}
+                    <div>
+                        <p><strong>Summary:</strong> {accomplishments.summary}</p>
+                        <p><strong>Research Paper:</strong> {accomplishments.research_paper}</p>
+                        <p><strong>Leadership Role:</strong> {accomplishments.leadership}</p>
+                    </div>
                 </div>
             </div>
 
@@ -101,6 +128,7 @@ const Student_Accomplishments = () => {
                             <button
                                 onClick={() => setIsModalOpen(false)}
                                 className="ml-auto inline-flex justify-center items-center rounded-full focus:outline-none"
+                                aria-label="Close modal"
                             >
                                 <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
                                     <path d="M18 6 6 18" />
@@ -110,25 +138,48 @@ const Student_Accomplishments = () => {
                         </div>
 
                         <h1 className='text-2xl font-semibold'>Accomplishments Summary</h1>
-                        <textarea className='border-2 rounded-2xl w-full p-3 h-32 outline-gray-600' placeholder='Write Accomplishments summary' value={inputValue} onChange={handleInputChange} />
+                        <textarea
+                            className='border-2 rounded-2xl w-full p-3 h-32 outline-gray-600'
+                            placeholder='Write Accomplishments summary'
+                            value={inputValue}
+                            onChange={handleInputChange}
+                        />
 
                         <div className='mt-4'>
                             <label className='flex items-center gap-2'>
-                                <input type='checkbox' checked={hasLeadershipRole} onChange={() => setHasLeadershipRole(!hasLeadershipRole)} />
+                                <input
+                                    type='checkbox'
+                                    checked={hasLeadershipRole}
+                                    onChange={() => setHasLeadershipRole(!hasLeadershipRole)}
+                                />
                                 Have you been part of any leadership group?
                             </label>
                             {hasLeadershipRole && (
-                                <textarea className='border-2 rounded-2xl w-full p-3 h-24 mt-2' placeholder='Describe your leadership experience' value={leadershipDescription} onChange={(e) => setLeadershipDescription(e.target.value)} />
+                                <textarea
+                                    className='border-2 rounded-2xl w-full p-3 h-24 mt-2'
+                                    placeholder='Describe your leadership experience'
+                                    value={leadershipDescription}
+                                    onChange={(e) => setLeadershipDescription(e.target.value)}
+                                />
                             )}
                         </div>
 
                         <div className='mt-4'>
                             <label className='flex items-center gap-2'>
-                                <input type='checkbox' checked={hasResearchPapers} onChange={() => setHasResearchPapers(!hasResearchPapers)} />
+                                <input
+                                    type='checkbox'
+                                    checked={hasResearchPapers}
+                                    onChange={() => setHasResearchPapers(!hasResearchPapers)}
+                                />
                                 Have you published any research papers?
                             </label>
                             {hasResearchPapers && (
-                                <textarea className='border-2 rounded-2xl w-full p-3 h-24 mt-2' placeholder='Describe your research papers' value={researchDescription} onChange={(e) => setResearchDescription(e.target.value)} />
+                                <textarea
+                                    className='border-2 rounded-2xl w-full p-3 h-24 mt-2'
+                                    placeholder='Describe your research papers'
+                                    value={researchDescription}
+                                    onChange={(e) => setResearchDescription(e.target.value)}
+                                />
                             )}
                         </div>
 
@@ -143,4 +194,4 @@ const Student_Accomplishments = () => {
     );
 };
 
-export default Student_Accomplishments;
+export default Student_Accomplishments;     

@@ -46,7 +46,7 @@ export default function SmallSc({ jobs }) {
                         <h1 className="text-lg font-semibold text-gray-900">Base Pay</h1>
                         <div className="mt-2 border border-[#91a0ed] p-3 rounded-lg bg-blue-50">
                             <p className="text-lg font-semibold text-gray-700">
-                                ₹{job.jobs?.package || "0"} <span className="text-sm text-gray-500">/mo (Employer est.)</span>
+                                ₹{job.jobs?.package || "0"}LPA <span className="text-sm text-gray-500">/mo (Employer est.)</span>
                             </p>
                             <p className="text-gray-600 text-sm mt-1">{job.jobs?.location || "Location Not Specified"}</p>
                         </div>

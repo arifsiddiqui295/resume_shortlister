@@ -1,54 +1,110 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import request from '../api/request';
 import { useStudent } from '../context/StudentProvider';
+
 const Student_Profile_Summary = () => {
     const { student } = useStudent();
-    const [isModalOpen, setIsModalOpen] = useState(false)
-    const [inputValue, setInputValue] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [inputValue, setInputValue] = useState('');
     const [profileSummary, setProfileSummary] = useState('');
     const [primaryKey, setPrimaryKey] = useState('');
+
     const saveProfileSummary = async () => {
-        const profile_summary = inputValue
-        // console.log(inputValue)
-        // console.log(profileSummary)
-        const response = await request('post', "/summary/", { summary: profile_summary, student });
-        // console.log("response:", response.summary)
-        setProfileSummary(inputValue)
-        setIsModalOpen(false)
-    }
-    const handleInputChange = (e) => {
-        const words = e.target.value.split(" ");
-        // Allow input only if word count is <= 50
-        if (words.length <= 200) {
-            setInputValue(e.target.value);
-        } else {
-            // Trigger toast notification if word count exceeds 50
-            toast.error("Only 50 words allowed.");
+        try {
+            if (!inputValue || inputValue.trim().length === 0) {
+                toast.error('Please enter a profile summary');
+                return;
+            }
+
+            const response = await request('post', "/summary/", {
+                summary: inputValue,
+                student
+            });
+
+            if (response && response.summary) {
+                setProfileSummary(response.summary);
+                setIsModalOpen(false);
+                toast.success('Profile summary saved successfully!');
+            }
+        } catch (error) {
+            console.error('Error saving profile summary:', error);
+            toast.error(error.message || 'Failed to save profile summary');
         }
     };
+
+    const updateProfileSummary = async () => {
+        try {
+            if (!inputValue || inputValue.trim().length === 0) {
+                toast.error('Please enter a profile summary');
+                return;
+            }
+
+            const response = await request('patch', `/summary/${primaryKey}/`, {
+                summary: inputValue,
+                student
+            });
+
+            if (response && response.summary) {
+                setProfileSummary(response.summary);
+                setIsModalOpen(false);
+                toast.success('Profile summary updated successfully!');
+            }
+        } catch (error) {
+            console.error('Error updating profile summary:', error);
+            toast.error(error.message || 'Failed to update profile summary');
+        }
+    };
+
+    const handleInputChange = (e) => {
+        try {
+            const words = e.target.value.split(' ');
+            if (words.length <= 200) {
+                setInputValue(e.target.value);
+            } else {
+                toast.error('Maximum 200 words allowed');
+            }
+        } catch (error) {
+            console.error('Error handling input:', error);
+            toast.error('Error processing your input');
+        }
+    };
+
     const deleteProfileSummary = async () => {
-        // console.log("Primary KEY:", primaryKey)
-        const res = await request('DELETE', `/summary/${primaryKey}/`);
-        setProfileSummary('')
-        setInputValue('');
-        setIsModalOpen(false);
-        // console.log("res:", res);
-    }
+        try {
+            if (!primaryKey) {
+                toast.error('No profile summary to delete');
+                return;
+            }
+
+            await request('DELETE', `/summary/${primaryKey}/`);
+            setProfileSummary('');
+            setInputValue('');
+            setIsModalOpen(false);
+            toast.success('Profile summary deleted successfully!');
+        } catch (error) {
+            console.error('Error deleting profile summary:', error);
+            toast.error(error.message || 'Failed to delete profile summary');
+        }
+    };
+
     useEffect(() => {
         const getProfileSummaryFromServer = async () => {
-            const res = await request('get', '/summary/');
-            // console.log("res from profile summary: ", res)
-            if(res.length>0){
-                setProfileSummary(res[0].summary)
-                setInputValue(res[0].summary)
-                // console.log("primary id",res[0].id);
-                setPrimaryKey(res[0].id)
+            try {
+                const res = await request('get', '/summary/');
+                if (res.length > 0) {
+                    setProfileSummary(res[0].summary);
+                    setInputValue(res[0].summary);
+                    setPrimaryKey(res[0].id);
+                }
+            } catch (error) {
+                console.error('Error fetching profile summary:', error);
+                toast.error(error.message || 'Failed to load profile summary');
             }
-        }
+        };
         getProfileSummaryFromServer();
-    }, [student])
+    }, [student]);
     return (
         <>
             <ToastContainer position="top-right" autoClose={3000} hideProgressBar={true} />
@@ -123,9 +179,16 @@ const Student_Profile_Summary = () => {
                         </div>
                         <div className='flex justify-end gap-2'>
                             <button onClick={() => deleteProfileSummary()} className='text-[#275df5] font-semibold'>Delete</button>
-                            <button
-                                onClick={saveProfileSummary}
-                                className='bg-[#275df5] text-white px-3 py-2 rounded-xl'>Save Changes</button>
+                            {profileSummary ? (
+                                <button
+                                    onClick={updateProfileSummary}
+                                    className='bg-[#275df5] text-white px-3 py-2 rounded-xl'>Update Changes</button>
+                            ) : (
+                                <button
+                                    onClick={saveProfileSummary}
+                                    className='bg-[#275df5] text-white px-3 py-2 rounded-xl'>Save Changes</button>
+                            )}
+
                         </div>
                     </div>
                 </div>
